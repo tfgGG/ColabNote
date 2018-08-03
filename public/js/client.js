@@ -1,5 +1,6 @@
 import '../css/quill.snow.css';
 
+import $ from 'jquery'
 import sharedb from 'sharedb/lib/client'
 import richText from 'rich-text'
 import Quill from 'quill'
@@ -18,9 +19,10 @@ window.connect = function() {
   var socket = new WebSocket('ws://' + window.location.host);
   connection.bindToSocket(socket);
 };*/
-
+var noteid = $("#editor").attr('class');
+console.log(noteid);
 // Create local Doc instance mapped to 'examples' collection document with id 'richtext'
-var doc = connection.get('examples', 'richtext');
+var doc = connection.get('examples', noteid);
 doc.subscribe(function(err) {
   if (err) throw err;
   var quill = new Quill('#editor', {theme: 'snow'});

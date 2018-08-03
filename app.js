@@ -37,7 +37,7 @@ app.get('/note/:id', function (req, res, next) {
     //opnen new doc on sharejs
     var newid = req.params.id;
     createDoc(newid);
-    res.render('home', {layout: false});
+    res.render('home', {layout: false,name:newid});
 });
 
 
@@ -65,9 +65,4 @@ function createDoc(newid)
       }
       //callback();
     });
-}
-
-function startServer()
-{
-
 }
