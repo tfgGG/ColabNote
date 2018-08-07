@@ -4,6 +4,8 @@ import $ from 'jquery'
 import sharedb from 'sharedb/lib/client'
 import richText from 'rich-text'
 import Quill from 'quill'
+
+
 sharedb.types.register(richText.type);
 
 var socket = new WebSocket('ws://' + window.location.host);
@@ -36,3 +38,4 @@ doc.subscribe(function(err) {
     quill.updateContents(op);
   });
 });
+

@@ -8,6 +8,8 @@ var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 var path = require('path')
 
+var data = require('./lib/getdata')
+
 var ShareDB = require('sharedb');
 var backend = new ShareDB();
 ShareDB.types.register(richText.type);
@@ -37,7 +39,8 @@ app.get('/note/:id', function (req, res, next) {
     //opnen new doc on sharejs
     var newid = req.params.id;
     createDoc(newid);
-    res.render('home', {layout: false,name:newid});
+    var comment =  data.getcomment(newid);
+    res.render('home', {layout: false,name:newid, comment:comment });
 });
 
 
@@ -66,3 +69,4 @@ function createDoc(newid)
       //callback();
     });
 }
+
