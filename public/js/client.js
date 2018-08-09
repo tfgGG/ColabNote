@@ -4,6 +4,7 @@ import $ from 'jquery'
 import sharedb from 'sharedb/lib/client'
 import richText from 'rich-text'
 import Quill from 'quill'
+ require('./comment')
 
 
 sharedb.types.register(richText.type);
@@ -39,3 +40,9 @@ doc.subscribe(function(err) {
   });
 });
 
+
+
+
+
+
+       

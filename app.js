@@ -15,7 +15,7 @@ var backend = new ShareDB();
 ShareDB.types.register(richText.type);
 
 app.set('views', path.join(__dirname, '/views'))
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 app.set('port',process.env.PORT||3000);
 app.use(express.static(__dirname +'/public'))
@@ -40,7 +40,7 @@ app.get('/note/:id', function (req, res, next) {
     var newid = req.params.id;
     createDoc(newid);
     var comment =  data.getcomment(newid);
-    res.render('home', {layout: false,name:newid, comment:comment });
+    res.render('main',{layout: false,name:newid, comment:comment });
 });
 
 

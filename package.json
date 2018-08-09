@@ -21,10 +21,14 @@
     "socket.io": "^2.1.1",
     "vue": "^2.5.17",
     "vue-loader": "^15.2.6",
+    "vue-template-compiler": "^2.5.17",
     "websocket-json-stream": "0.0.3",
     "ws": "^6.0.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-latest": "^6.24.1",
     "css-loader": "^1.0.0",
     "style-loader": "^0.21.0",
     "webpack": "^4.16.3",
