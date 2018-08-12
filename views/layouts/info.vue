@@ -7,19 +7,18 @@
         <div id="time">time</div>
         </div>
          <input type="button" value="Send" v-on:click="send">
-         <button type="button" class="btn btn-danger">Danger</button>
     </div>
 </div>
 </template>
 
 <script>
-var socket = require("socket.io-client")("http://localhost:3000");
+
 var db = require("../../lib/getdata");
 
 export default {
   data: function() {
     return {
-      menuItems: db.getuser()
+      menuItems: db.getinfo()
     };
   },
   methods: {

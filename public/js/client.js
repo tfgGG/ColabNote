@@ -1,10 +1,10 @@
 import '../css/quill.snow.css';
 
-import $ from 'jquery'
-import sharedb from 'sharedb/lib/client'
-import richText from 'rich-text'
-import Quill from 'quill'
- require('./comment')
+import $ from 'jquery';
+import sharedb from 'sharedb/lib/client';
+import richText from 'rich-text';
+import Quill from 'quill';
+require('./main');
 
 
 sharedb.types.register(richText.type);
@@ -12,16 +12,7 @@ sharedb.types.register(richText.type);
 var socket = new WebSocket('ws://' + window.location.host);
 var connection = new sharedb.Connection(socket);
 alert("In client");
-//socket = io.connect();
-// For testing reconnection
-/*
-window.disconnect = function() {
-  connection.close();
-};
-window.connect = function() {
-  var socket = new WebSocket('ws://' + window.location.host);
-  connection.bindToSocket(socket);
-};*/
+
 var noteid = $("#editor").attr('class');
 console.log(noteid);
 // Create local Doc instance mapped to 'examples' collection document with id 'richtext'
@@ -39,7 +30,6 @@ doc.subscribe(function(err) {
     quill.updateContents(op);
   });
 });
-
 
 
 
