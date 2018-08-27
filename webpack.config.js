@@ -22,13 +22,17 @@ module.exports = {
           loader: 'babel-loader'
         },
         {
+          test: /\.(jpe?g|png|gif|svg)$/i, 
+          loader: "file-loader?name=/public/img/[name].[ext]"
+        },
+        /*{
           test: /\.png$/,
           use: "url-loader?limit=100000"
         },
         {
            test: /\.jpg$/,
            use: "file-loader"
-        },
+        },*/
        {
           test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
           use: 'url-loader?limit=10000&mimetype=application/font-woff'
