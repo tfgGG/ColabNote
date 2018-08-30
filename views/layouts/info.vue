@@ -1,13 +1,6 @@
 <template>
 <div>
-    <div v-for="item in menuItems">
-        <div id='comment'>
-        <div id="user">{{item}}</div>
-        <div id="text">text</div>
-        <div id="time">time</div>
-        </div>
-         <input type="button" value="Send" v-on:click="send">
-    </div>
+    
 </div>
 </template>
 
@@ -18,7 +11,7 @@ var db = require("../../lib/getdata");
 export default {
   data: function() {
     return {
-      menuItems: db.getinfo()
+      menuItems: "wdwd"
     };
   },
   methods: {
