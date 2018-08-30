@@ -33,7 +33,10 @@
 
 <script>
 import {commentdoc} from '../../public/js/client'
-
+import ShareDB from 'sharedb/lib/client';
+var socket = new WebSocket('ws://localhost:3000');
+var connection = new ShareDB.Connection(socket);
+const cdoc = connection.get('comment',"text");
 export default {
   data() {
     return {
@@ -50,18 +53,30 @@ export default {
   },
   mounted: function(){
 
-      /*
-      commentdoc.subscribe(function(err){
+      const store = this.$store;
+      cdoc.subscribe(function(err){
+           if (err) throw err;
 
-          if (err) throw err;
-          commentdoc.on('op',function(op){
-            console.log(op);
-          });
-      });*/
+        cdoc.on('op',function(op){
+          console.log(cdoc.data.comment);
+          store.dispatch("addcomment",cdoc.data.comment);
+         });
+      });
+      
+      
   },
   methods: {
     send: function() {
-      console.log("send");
+      const d = new Date();
+      const comment=[];
+      const obj = {
+        date: d.toLocaleTimeString(),
+        user: this.user.name,
+        comment: this.comment
+      }
+      console.log("send out");
+      cdoc.submitOp([{p: ['comment','0'], li:obj}]);
+      
     }
   }
 };

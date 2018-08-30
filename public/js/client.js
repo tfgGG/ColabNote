@@ -6,18 +6,25 @@ import richText from 'rich-text';
 import Quill from 'quill';
 require('./main');
 
-
 sharedb.types.register(richText.type);
 
 var socket = new WebSocket('ws://' + window.location.host);
 var connection = new sharedb.Connection(socket);
-alert("In client");
 
+//Get note page hash index
 var noteid = $("#editor").attr('class');
 console.log(noteid);
-// Create local Doc instance mapped to 'examples' collection document with id 'richtext'
+
 var doc = connection.get('examples', noteid);
+//var commentdoc = connection.get('comment',noteid);
+
+//console.log("comment:"+commentdoc.id);
+/*----
+quill editor broadcast 
+---*/
+
 doc.subscribe(function(err) {
+  
   if (err) throw err;
   var quill = new Quill('#editor', {theme: 'snow'});
   quill.setContents(doc.data);
@@ -25,12 +32,38 @@ doc.subscribe(function(err) {
     if (source !== 'user') return;
     doc.submitOp(delta, {source: quill});
   });
+
+  quill.on('editor-change', function(eventName, ...args) {
+    var range = quill.getSelection();
+ 
+    var text = quill.getText(range.index, range.length);
+    console.log('position ', range.index);
+  });
+
   doc.on('op', function(op, source) {
     if (source === quill) return;
     quill.updateContents(op);
   });
 });
 
+
+/*---
+comment broadcast
+----*/
+/*
+commentdoc.subscribe(function(err){
+
+    if (err) throw err;
+    commentdoc.on('op',function(op){
+        console.log()
+    });
+});
+
+function sendcomment(user,comment){
+  commnentdoc.submitOp([{p: ['comment','0'], si:$("#comment").text}]);
+}
+*/
+//export {commentdoc};
 
 
 
