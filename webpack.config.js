@@ -1,7 +1,7 @@
 var path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 module.exports = {
-  entry: ['./public/js/client.js'], 
+  entry: ['./views/main.js'], 
   output: {
     path: path.join(__dirname, '/public/build/'),
     filename: 'bundle.js'
@@ -25,14 +25,6 @@ module.exports = {
           test: /\.(jpe?g|png|gif|svg)$/i, 
           loader: "file-loader?name=/public/img/[name].[ext]"
         },
-        /*{
-          test: /\.png$/,
-          use: "url-loader?limit=100000"
-        },
-        {
-           test: /\.jpg$/,
-           use: "file-loader"
-        },*/
        {
           test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
           use: 'url-loader?limit=10000&mimetype=application/font-woff'

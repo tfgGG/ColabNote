@@ -32,15 +32,17 @@
 </template>
 
 <script>
-import {commentdoc} from '../../public/js/client'
+
 import ShareDB from 'sharedb/lib/client';
 var socket = new WebSocket('ws://localhost:3000');
 var connection = new ShareDB.Connection(socket);
 const cdoc = connection.get('comment',"text");
 export default {
+  props:["ids"],
   data() {
     return {
       comment:"",
+      ids: ""
     };
   },
   computed:{

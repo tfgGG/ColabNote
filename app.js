@@ -28,17 +28,11 @@ wss.on('connection', function(ws, req) {
   backend.listen(stream);
 });
 
-
-app.get('/', function (req, res, next) {
-    res.render('home', {layout: false});
-});
-
+  
 app.get('/note/:id', function (req, res, next) {
     
-    var newid = req.params.id;
-    createDoc(newid);//opnen new doc on sharejs
-
-    res.render('main',{layout: false,name:newid });
+    createDoc(req.params.id);
+    res.render('main',{layout: false });
 });
 
 
@@ -51,7 +45,7 @@ app.use(function(req,res){
 function createDoc(newid) 
 {
     var connection = backend.connect();
-    var doc = connection.get('examples', newid);
+    var doc = connection.get('note', newid);
     var commentdoc = connection.get('comment', newid);
     doc.fetch(function(err) {
       if (err) throw err;

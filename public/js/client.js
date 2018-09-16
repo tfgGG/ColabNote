@@ -1,11 +1,12 @@
-import '../css/quill.snow.css';
+/*
 
 import $ from 'jquery';
 import sharedb from 'sharedb/lib/client';
 import richText from 'rich-text';
 import Quill from 'quill';
-require('./main');
+require('./main');*/
 
+/*
 sharedb.types.register(richText.type);
 
 var socket = new WebSocket('ws://' + window.location.host);
@@ -13,15 +14,12 @@ var connection = new sharedb.Connection(socket);
 
 //Get note page hash index
 var noteid = $("#editor").attr('class');
-console.log(noteid);
+console.log("awdawd"+noteid);
 
-var doc = connection.get('examples', noteid);
+var doc = connection.get('note', noteid);
 //var commentdoc = connection.get('comment',noteid);
 
 //console.log("comment:"+commentdoc.id);
-/*----
-quill editor broadcast 
----*/
 
 doc.subscribe(function(err) {
   
@@ -45,7 +43,7 @@ doc.subscribe(function(err) {
     quill.updateContents(op);
   });
 });
-
+*/
 
 /*---
 comment broadcast
