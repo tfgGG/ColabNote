@@ -35,6 +35,11 @@ app.get('/note/:id', function (req, res, next) {
     res.render('main',{layout: false });
 });
 
+app.get('/note/:noteid/:id',function(req,res,next){
+    createDoc(req.params.noteid,req.params.id);
+    res.render('main',{layout: false });
+});
+
 
 app.use(function(req,res){
     res.status(404);
@@ -42,11 +47,11 @@ app.use(function(req,res){
     res.send('404-Notfound');
 })
 
-function createDoc(newid) 
+function createDoc(noteid,id) 
 {
     var connection = backend.connect();
-    var doc = connection.get('note', newid);
-    var commentdoc = connection.get('comment', newid);
+    var doc = connection.get(noteid, id);
+    var commentdoc = connection.get('comment', id);
     doc.fetch(function(err) {
       if (err) throw err;
       if (doc.type === null) {

@@ -1,9 +1,10 @@
 <template>
 <div>
-    <div id="editor">
+    <div id="editor" >
       
     </div>
-    <div>
+    <div id="menu">
+    </div>
 </div>
 </template>
 
@@ -16,10 +17,11 @@ const socket = new WebSocket('ws://localhost:3000');
 const connection = new ShareDB.Connection(socket);
 ShareDB.types.register(richText.type);
 export default {
-  props:["ids"],
+  props:["note"],
   data() {
     return {
       ids:this.ids,
+      
     };
   },
   computed:{
@@ -63,4 +65,8 @@ export default {
 
 <style>
 /* 樣式也可以包進來 ._. */
+
+#editor{
+  height: 400px;
+}
 </style>

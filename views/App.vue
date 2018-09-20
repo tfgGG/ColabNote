@@ -19,14 +19,19 @@ export default {
     },
     data () {
         return {
-            ids:''
+            note:{
+                ids:'',
+                noteid:''
+            }
+            
         }
     },
     created: function() {
         
         const word = window.location.pathname.split('/');
         this.ids = word[2];
-        console.log(this.ids);
+        this.noteid = word[1];
+        console.log(this.ids+" "+ this.noteid);
         
     }
 }
