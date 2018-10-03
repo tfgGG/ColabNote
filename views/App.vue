@@ -10,8 +10,8 @@
         </div>
         <div id="main">
            <button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>
-            <editor  v-bind:ids="ids"></editor>
-             <comment></comment>
+            <editor v-bind:ids="ids"></editor>
+             <comment v-bind:ids="ids"></comment>
         </div>
     </div>
 </template>
@@ -29,14 +29,15 @@ export default {
     },
     data () {
         return {
-            ids:'',
+            ids:[],
             toogle: "0",
         }
     },
     created: function() {
         
         const word = window.location.pathname.split('/');
-        this.ids = word[2];
+        this.ids.push( word[2])
+        this.ids.push( word[3])
         console.log(this.ids);
         
     },

@@ -1,12 +1,12 @@
 var express = require('express');
 var app = express();
-
-var Client = require('node-rest-client').Client;
+var cors = require('cors')
 var exphbs  = require('express-handlebars');
 var richText = require('rich-text');
 var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 var path = require('path')
+require("@babel/polyfill");
 
 
 var ShareDB = require('sharedb');
@@ -18,7 +18,7 @@ app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 app.set('port',process.env.PORT||3000);
 app.use(express.static(__dirname +'/public'))
-
+app.use(cors());
 var server = app.listen(app.get('port'));
 //var io = require('socket.io')(server);
 
@@ -28,18 +28,17 @@ wss.on('connection', function(ws, req) {
   backend.listen(stream);
 });
 
-  
+
 app.get('/note/:id', function (req, res, next) {
-    
     createDoc(req.params.id);
     res.render('main',{layout: false });
 });
 
 app.get('/note/:noteid/:id',function(req,res,next){
-    createDoc(req.params.noteid,req.params.id);
-    res.render('main',{layout: false });
-});
-
+    createDoc(req.params.noteid,req.params.id)
+    console.log(req.params.noteid +" "+req.params.id);
+    res.render('main',{layout:false})
+})
 
 app.use(function(req,res){
     res.status(404);
@@ -50,8 +49,10 @@ app.use(function(req,res){
 function createDoc(noteid,id) 
 {
     var connection = backend.connect();
+
     var doc = connection.get(noteid, id);
-    var commentdoc = connection.get('comment', id);
+    var commentdoc = connection.get('comment', noteid);
+
     doc.fetch(function(err) {
       if (err) throw err;
       if (doc.type === null) {
@@ -68,6 +69,6 @@ function createDoc(noteid,id)
         return;
       }
     });
-    console.log("comment"+commentdoc.id+" note"+ doc.id);
+    console.log("comment"+commentdoc.id+ " "+　noteid+ doc.id);
 }
 

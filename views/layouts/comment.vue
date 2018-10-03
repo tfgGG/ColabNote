@@ -28,21 +28,30 @@
           </div>
       </div>
     </div>
+    <div class="card" >
+      <span v-for="item in detail">
+        {{detail}}
+      </span>
+    </div>
+    <button v-on:click="show">show</button>
 </div>
 </template>
 
 <script>
 
 import ShareDB from 'sharedb/lib/client';
+import db  from '../../lib/getdata'
+import axios from 'axios'
 var socket = new WebSocket('ws://localhost:3000');
 var connection = new ShareDB.Connection(socket);
-const cdoc = connection.get('comment',"text");
+var cdoc;
 export default {
   props:["ids"],
   data() {
     return {
       comment:"",
-      ids: ""
+      ids: "",
+      detail:[]
     };
   },
   computed:{
@@ -51,23 +60,43 @@ export default {
     },
     user(){
       return this.$store.state.user
-    }
+    },
+  },
+  created(){
+    this.fetchdata()
   },
   mounted: function(){
+
+      cdoc = connection.get("comment",this.ids);
 
       const store = this.$store;
       cdoc.subscribe(function(err){
            if (err) throw err;
 
         cdoc.on('op',function(op){
-          console.log(cdoc.data.comment);
+          //console.log(cdoc);
           store.dispatch("addcomment",cdoc.data.comment);
          });
       });
+
       
+
+      axios.get('/login/now/')
+            .then((response)=> {
+              console.log("Vue Comment User")
+              console.log(response)
+            })
+            .catch(function (error) {
+                console.log("get detail error"+ error);
+      });
+      //Initial comment list from db
+      //store.commit("setcomment",this.ids)
       
   },
   methods: {
+    show: function(){
+      console.log(this.detail)
+    },
     send: function() {
       const d = new Date();
       const comment=[];
@@ -79,6 +108,9 @@ export default {
       console.log("send out");
       cdoc.submitOp([{p: ['comment','0'], li:obj}]);
       
+    },
+    fetchdata: function(){
+       console.log("Created fetch data")
     }
   }
 };
