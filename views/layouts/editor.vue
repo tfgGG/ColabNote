@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div id="editor">
+    <div ref="editor">
       
     </div>
     <div id="menu">
@@ -25,7 +25,9 @@ export default {
     return {
       id:this.ids,
       note:{},
-      detail:[]
+      detail:[],
+      quill: null,
+      editdoc:null
     };
   },
   computed:{
@@ -35,7 +37,6 @@ export default {
 
   },
   mounted: function(){
-
 
        axios.get('/upload/RESTdetail/27/')
             .then((response)=> {
@@ -48,33 +49,35 @@ export default {
       });
       console.log("Editor Ids array")
       console.log(this.id)
-      const editdoc = connection.get(this.id[0],this.id[1]);
-      console.log("editdoc"+ editdoc);
-      editdoc.subscribe(function(err) { 
+      this.editdoc = connection.get(this.id[0],this.id[1]);
+
+      this.quill = new Quill(this.$refs.editor,{theme: 'snow'})
+      this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
-          const quill = new Quill('#editor', {theme: 'snow'});
-          //console.log(quill);
-          quill.setContents(editdoc.data);
-          quill.on('text-change', function(delta, oldDelta, source) {
+          this.quill.setContents(this.editdoc.data);
+          this.quill.on('text-change', (delta, oldDelta, source)=> {
             if (source !== 'user') return;
-            editdoc.submitOp(delta, {source: quill});
+            this.editdoc.submitOp(delta, {source:this.quill});
           });
 
-          quill.on('editor-change', function(eventName, ...args) {
-            var range = quill.getSelection();
+         this.quill.on('editor-change', (eventName, ...args) => {
+            var range =this.quill.getSelection();
         
-            var text = quill.getText(range.index, range.length);
-            //console.log('position ', range.index);
+            var text =this.quill.getText(range.index, range.length);
+            console.log('position ', range.index);
           });
 
-          editdoc.on('op', function(op, source) {
-            if (source === quill) return;
-            quill.updateContents(op);
+          this.editdoc.on('op', (op, source) =>{
+            if (source ===this.quill) return;
+            this.update(op)
           }); 
       });
   },
   methods: {
+     update:function(op){
+        this.quill.updateContents(op);
+     }
     
   }
 };
