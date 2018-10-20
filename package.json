@@ -17,6 +17,7 @@
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
     "handlebars-loader": "^1.7.0",
+    "hashids": "^1.2.2",
     "isomorphic-ws": "^4.0.1",
     "jquery": "^3.3.1",
     "node-rest-client": "^3.1.0",
