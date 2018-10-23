@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import hash from "../lib/hash"
 import db from '../lib/getdata'
 //import { state } from 'fs';
 
@@ -34,10 +35,17 @@ export const store = new Vuex.Store({
             state.noteid = id;
         },
         setmenulist:(state,obj)=>{
+             //obj is a list
+            obj.forEach(el => {
+                el.idnote_list = hash.hashes(el.idnote_list)
+                el.noteid = hash.hashes(el.noteid)
+            })
             state.menulist = obj
             console.log("Mutation Menu"+ obj);
         },
         addmenulist:function(state,obj){
+            obj.idnote_list = hash.hashes(obj.idnote_list)
+            obj.noteid = hash.hashes(obj.noteid)
             state.menulist.push(obj)
         }
     },
@@ -47,7 +55,7 @@ export const store = new Vuex.Store({
             db.postcomment(context.noteid,obj)
         },
         setmenulist: (context,id)=>{
-            axios.get('/upload/RESTdetail/27/')
+            axios.get('/upload/RESTdetail/'+ hash.dec(id) + "/")
                 .then((response)=> {
                 console.log("In ")
                 context.commit("setmenulist",response.data)
@@ -58,15 +66,17 @@ export const store = new Vuex.Store({
                 });
         },
         addmenulist:(context,obj)=>{
-            axios.post('/upload/RESTdetail/27/')
+            axios.post('/upload/addnotedetail/', obj)
             .then((response)=> {
-                
-                context.commit("addmenulist",response.data)
-            //context.menulist = response.data                   
+                console.log(response.data)
+                context.commit("addmenulist",response.data)       
             })
             .catch(function (error) {
-                console.log("Get Detail error"+ error);
+                console.log("Post Detail error"+ error);
             });
+        },
+        changetitle:(context,obj)=>{
+            console.log("Change Title"+ obj)
         }
     }
 

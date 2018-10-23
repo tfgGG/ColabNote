@@ -11,7 +11,7 @@
                         <editor v-bind:ids="ids"></editor>
                         <comment v-bind:ids="ids"></comment>
     
-                    <info></info>
+                    <info v-bind:ids="ids"></info>
 
         </div>    
             
@@ -23,11 +23,10 @@
 import comment from './layouts/comment.vue' 
 import info from './layouts/info.vue' 
 import editor from './layouts/editor.vue' 
-import menu from './layouts/menu.vue' 
+
 export default {
     components:{
         comment:comment,
-         menu: menu,
          editor: editor,
          info:info
        

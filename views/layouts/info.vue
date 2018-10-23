@@ -5,38 +5,44 @@
             placeholder="Enter New Note title"
             v-model="newtitle">
       <button type="button" @click="addNote" class="btn btn-primary" >New</button>
+      <section class="main" v-show="menulist.length" v-cloak>
       <ul>
         <li v-for="item in menulist"
-            class="todo"
-            :key="item">
+            class="item"
+            :key="item.idnote_list"
+            :class="{ editing: item == editeditem }">
             
             <div class="view">
-              <a @dblclick="editTodo(todo)">{{ item.list_text }}</a>
-              <button class="destroy" @click="removeTodo(item)"></button>
+              <label @dblclick="editNote(item)" 
+                 v-bind:href="'http://localhost:3000/note/' + item.noteid + '/'+ item.idnote_list">
+                 {{ item.list_text }}
+              </label>
+              <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
             <input class="edit" type="text"
               v-model="item.list_text"
-              v-todo-focus="todo == editedTodo"
-              @blur="doneEdit(todo)"
-              @keyup.enter="doneEdit(todo)"
-              @keyup.esc="cancelEdit(todo)">
+              v-todo-focus="item == editeditem"
+              @blur="doneEdit(item)"
+              @keyup.enter="doneEdit(item)"
+              @keyup.esc="cancelEdit(item)">
         </li>
       </ul>
+      </section>
 
       {{menulist}}
 </div>
 </template>
 
 <script>
-
-import axios from 'axios'
-import Hash from "../../lib/hash"
+var hash = require("../../lib/hash.js")
 export default {
+  props:['ids'],
   data: function() {
     return {
-      menuItems: "wdwd",
-      newtitle:""
-    };
+      newtitle:"",
+      editeditem:"",
+      ids:""
+    }
   },
   computed:{
       menulist(){
@@ -46,25 +52,44 @@ export default {
   created: function(){ 
     
      console.log("!!!!!Vue menu List!!!!!!")
-     this.$store.dispatch('setmenulist', '16') 
-     console.log(this.menulist)
-
+     this.$store.dispatch('setmenulist', ""+ this.ids[0] )
+     //console.log("result of decode"+hash.dec("QbYKez"))
+    
   },
   methods: {
     addNote(){
       var obj = {
         list_text:this.newtitle,
         note: "",
-        list_num: menulist.length+1
+        list_num: this.menulist.length+1,
+        noteid: hash.dec(this.ids[0])
       }
       this.newtitle = ""
       this.$store.dispatch("addmenulist",obj)    
     },
-    doneEdit(){
-
+    doneEdit(item){
+      if (!this.editeditem) {
+        return
+      }
+      this.editeditem = null
+      if (!item.list_text) {
+        item.list_text="Edit Here"
+      }
+      this.$store.dispatch("changetitle",item.list_text)
     },
     cancelEdit(){
 
+    },
+    editNote(item){
+      console.log("editNOte")
+      this.editeditem = item
+    }
+  },
+  directives: {
+    'todo-focus': function (el, binding) {
+      if (binding.value) {
+        el.focus()
+      }
     }
   }
 };
@@ -74,5 +99,16 @@ export default {
 /* 樣式也可以包進來 ._. */
 .original-white {
   color: #fff;
+}
+[v-cloak] { display: none; }
+
+.editing .view {
+    display: none;
+}
+.edit{
+  display: none;
+}
+.editing .edit{
+    display: block;
 }
 </style>
