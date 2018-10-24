@@ -7,6 +7,7 @@ var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 var path = require('path')
 var axios = require('axios')
+var Hashids = require('hashids')
 require("@babel/polyfill");
 //var S = require('./lib/utils')
 
@@ -29,6 +30,15 @@ wss.on('connection', function(ws, req) {
   var stream = new WebSocketJSONStream(ws)
   backend.listen(stream);
 });
+
+app.get('/note/:noteid/1/',function(req,res,next){
+    var hashids = new Hashids("",6)
+    var newhash1 = hashids.encode(req.params.noteid)
+    console.log(newhash1)
+    console.log(newhash2)
+    var newhash2 = hashids.encode(req.params.noteid*100 + 1) 
+    res.redirect('../../'+ newhash1+'/'+ newhash2)
+})
 
 
 app.get('/note/:noteid/:id',function(req,res,next){

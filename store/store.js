@@ -37,14 +37,14 @@ export const store = new Vuex.Store({
         setmenulist:(state,obj)=>{
              //obj is a list
             obj.forEach(el => {
-                el.idnote_list = hash.hashes(el.idnote_list)
+                el.idnote_list = hash.hashes(el.noteid*100 + el.list_num)
                 el.noteid = hash.hashes(el.noteid)
             })
             state.menulist = obj
             console.log("Mutation Menu"+ obj);
         },
         addmenulist:function(state,obj){
-            obj.idnote_list = hash.hashes(obj.idnote_list)
+            obj.idnote_list = hash.hashes(obj.noteid*100 + obj.list_num)
             obj.noteid = hash.hashes(obj.noteid)
             state.menulist.push(obj)
         }

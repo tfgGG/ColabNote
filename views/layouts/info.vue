@@ -13,10 +13,10 @@
             :class="{ editing: item == editeditem }">
             
             <div class="view">
-              <label @dblclick="editNote(item)" 
+              <a v-on:dblclick="editNote(item)" 
                  v-bind:href="'http://localhost:3000/note/' + item.noteid + '/'+ item.idnote_list">
                  {{ item.list_text }}
-              </label>
+              </a>
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
             <input class="edit" type="text"
@@ -52,7 +52,7 @@ export default {
   created: function(){ 
     
      console.log("!!!!!Vue menu List!!!!!!")
-     this.$store.dispatch('setmenulist', ""+ this.ids[0] )
+     this.$store.dispatch('setmenulist', this.ids[0] )
      //console.log("result of decode"+hash.dec("QbYKez"))
     
   },

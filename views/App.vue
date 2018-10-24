@@ -5,14 +5,19 @@
                
         </div>
         
-        <div id="main">
-
+        <div id="main" >
+            <div class='container fluid'>
+                <div class="row">
+                    <div class="col-md-9">
                         <button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>
                         <editor v-bind:ids="ids"></editor>
                         <comment v-bind:ids="ids"></comment>
-    
-                    <info v-bind:ids="ids"></info>
-
+                    </div>
+                    <div class="col-md-3">
+                        <info v-bind:ids="ids"></info>
+                    </div>
+                </div>
+            </div>
         </div>    
             
     </div>
