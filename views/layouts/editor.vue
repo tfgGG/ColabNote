@@ -3,10 +3,6 @@
     <div ref="editor">
       
     </div>
-    <div id="menu">
-      <ul>
-      </ul>
-    </div>
 </div>
 </template>
 
@@ -27,7 +23,7 @@ export default {
       note:{},
       detail:[],
       quill: null,
-      editdoc:null
+      editdoc:null,
     };
   },
   computed:{
@@ -38,19 +34,12 @@ export default {
   },
   mounted: function(){
 
-       axios.get('/upload/RESTdetail/27/')
-            .then((response)=> {
-              console.log("Vue Comment Detail")
-              console.log(response.data)
-                this.detail = response.data
-            })
-            .catch(function (error) {
-                console.log("Get Detail error"+ error);
-      });
-      console.log("Editor Ids array")
-      console.log(this.id)
-      this.editdoc = connection.get(this.id[0],this.id[1]);
 
+     // console.log("Editor Ids array")
+      //console.log(this.id)
+      
+      this.editdoc = connection.get(this.id[0],this.id[1]);
+    
       this.quill = new Quill(this.$refs.editor,{theme: 'snow'})
       this.editdoc.subscribe((err)=> { 
   
@@ -62,10 +51,10 @@ export default {
           });
 
          this.quill.on('editor-change', (eventName, ...args) => {
-            var range =this.quill.getSelection();
+            //var range =this.quill.getSelection();
         
-            var text =this.quill.getText(range.index, range.length);
-            console.log('position ', range.index);
+            //var text =this.quill.getText(range.index, range.length);
+            //console.log('position ', range.index);
           });
 
           this.editdoc.on('op', (op, source) =>{
@@ -75,8 +64,17 @@ export default {
       });
   },
   methods: {
-     update:function(op){
+     update(op){
         this.quill.updateContents(op);
+     },
+     connection(noteid,id){
+        if(this.editdoc.id == id)
+          return;
+        var doc = connection.get(noteid,id)
+        doc.fetch(()=>{
+          this.update(doc.data);
+        })
+        this.editdoc = doc
      }
     
   }

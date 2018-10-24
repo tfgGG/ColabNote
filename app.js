@@ -6,7 +6,10 @@ var richText = require('rich-text');
 var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 var path = require('path')
+var axios = require('axios')
+var Hashids = require('hashids')
 require("@babel/polyfill");
+//var S = require('./lib/utils')
 
 
 var ShareDB = require('sharedb');
@@ -28,11 +31,15 @@ wss.on('connection', function(ws, req) {
   backend.listen(stream);
 });
 
+app.get('/note/:noteid/1/',function(req,res,next){
+    var hashids = new Hashids("",6)
+    var newhash1 = hashids.encode(req.params.noteid)
+    console.log(newhash1)
+    console.log(newhash2)
+    var newhash2 = hashids.encode(req.params.noteid*100 + 1) 
+    res.redirect('../../'+ newhash1+'/'+ newhash2)
+})
 
-app.get('/note/:id', function (req, res, next) {
-    createDoc(req.params.id);
-    res.render('main',{layout: false });
-});
 
 app.get('/note/:noteid/:id',function(req,res,next){
     createDoc(req.params.noteid,req.params.id)
@@ -46,6 +53,7 @@ app.use(function(req,res){
     res.send('404-Notfound');
 })
 
+// New Note
 function createDoc(noteid,id) 
 {
     var connection = backend.connect();
@@ -72,3 +80,25 @@ function createDoc(noteid,id)
     console.log("comment"+commentdoc.id+ " "+　noteid+ doc.id);
 }
 
+/*
+var service = new S.Service()
+service.get('/upload/RESTdetail/27/',init)
+
+function init(a,b){
+    console.log("----a--b---")
+    console.log(a)
+    console.log(b)
+    console.log("----a--b---")
+}*/
+
+axios.defaults.baseURL = "http://localhost:8000/"
+/*
+axios.get('/upload/RESTdetail/27/')
+.then((response)=> {
+  console.log("Node App")
+  console.log(response.data)
+    
+})
+.catch(function (error) {
+    console.log("Get Detail error"+ error);
+});*/

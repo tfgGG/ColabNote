@@ -33,7 +33,6 @@
         {{detail}}
       </span>
     </div>
-    <button v-on:click="show">show</button>
 </div>
 </template>
 
@@ -78,25 +77,9 @@ export default {
           store.dispatch("addcomment",cdoc.data.comment);
          });
       });
-
-      
-
-      axios.get('/login/now/')
-            .then((response)=> {
-              console.log("Vue Comment User")
-              console.log(response)
-            })
-            .catch(function (error) {
-                console.log("get detail error"+ error);
-      });
-      //Initial comment list from db
-      //store.commit("setcomment",this.ids)
       
   },
   methods: {
-    show: function(){
-      console.log(this.detail)
-    },
     send: function() {
       const d = new Date();
       const comment=[];

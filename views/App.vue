@@ -2,17 +2,24 @@
     <div>
         
         <div id="mySidenav" class="sidenav">
-            <info></info>
-              <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
+               
         </div>
-        <div id="main">
-           <button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>
-            <editor v-bind:ids="ids"></editor>
-             <comment v-bind:ids="ids"></comment>
-        </div>
+        
+        <div id="main" >
+            <div class='container fluid'>
+                <div class="row">
+                    <div class="col-md-9">
+                        <button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>
+                        <editor v-bind:ids="ids"></editor>
+                        <comment v-bind:ids="ids"></comment>
+                    </div>
+                    <div class="col-md-3">
+                        <info v-bind:ids="ids"></info>
+                    </div>
+                </div>
+            </div>
+        </div>    
+            
     </div>
 </template>
 
@@ -21,11 +28,13 @@
 import comment from './layouts/comment.vue' 
 import info from './layouts/info.vue' 
 import editor from './layouts/editor.vue' 
+
 export default {
     components:{
         comment:comment,
-        info:info,
-        editor: editor
+         editor: editor,
+         info:info
+       
     },
     data () {
         return {
