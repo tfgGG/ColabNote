@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import hash from "../lib/hash"
 import db from '../lib/getdata'
+import { finished } from 'stream';
 //import { state } from 'fs';
 
 Vue.use(Vuex)
@@ -11,15 +12,21 @@ export const store = new Vuex.Store({
 
     state:{
         user: db.getuser(),
-        notelist: {},
+        noteid: null,
         commentlist:[],
         menulist:[],
+        current:"hI"
         //detail: db.getdetail()
     },
     getters: {
         menulist: state => {
             return state.menulist
-        }
+        },
+        /*current:state=>{
+            return state.menulist.find((item, index, array)=>{
+                return item.idnote_list == noteid[1]
+            }).note
+        }*/
     },
     mutations:{
 
@@ -41,12 +48,18 @@ export const store = new Vuex.Store({
                 el.noteid = hash.hashes(el.noteid)
             })
             state.menulist = obj
+            
+            console.log(state.current)
             console.log("Mutation Menu"+ obj);
         },
         addmenulist:function(state,obj){
             obj.idnote_list = hash.hashes(obj.noteid*100 + obj.list_num)
             obj.noteid = hash.hashes(obj.noteid)
             state.menulist.push(obj)
+        },
+        savenote:function(state,obj){
+            state.menulist[obj.list_num].note = obj.note
+            console.log("FinishSaving")
         }
     },
     actions:{
@@ -73,6 +86,20 @@ export const store = new Vuex.Store({
             })
             .catch(function (error) {
                 console.log("Post Detail error"+ error);
+            });
+        },
+        savenote:(context,obj)=>{
+           
+            console.log("BEFORE SAVING");
+            console.log(obj)
+            axios.put('/upload/putdetail/'+ hash.dec(obj.noteid) +"/"+ obj.list_num, obj)
+            .then((response)=> {
+                console.log("After saving")
+                console.log(response.data)
+                context.commit("savenote",response.data)       
+            })
+            .catch(function (error) {
+                console.log("PUT Detail error"+ error);
             });
         },
         changetitle:(context,obj)=>{

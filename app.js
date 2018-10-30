@@ -64,7 +64,7 @@ function createDoc(noteid,id)
     doc.fetch(function(err) {
       if (err) throw err;
       if (doc.type === null) {
-        doc.create([{insert: 'Hi!'}], 'rich-text');
+        doc.create([], 'rich-text');
         return;
       }
       //callback();

@@ -21,30 +21,45 @@ export default {
     return {
       id:this.ids,
       note:{},
-      detail:[],
+      saving:null,
       quill: null,
       editdoc:null,
+
     };
   },
-  computed:{
+   computed:{
+      menulist(){
+        return this.$store.getters.menulist
+      },
   },
   created: function(){ 
-     //console.log(this.ids); 
+     this.save()
 
+    
   },
   mounted: function(){
-
-
-     // console.log("Editor Ids array")
-      //console.log(this.id)
       
       this.editdoc = connection.get(this.id[0],this.id[1]);
-    
       this.quill = new Quill(this.$refs.editor,{theme: 'snow'})
+      
       this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
-          this.quill.setContents(this.editdoc.data);
+
+          //代表server turn on again 或 使用者本來就空的
+          if(this.editdoc.data.ops.length == 0){
+             var t = setTimeout(()=>{
+                console.log("printing IF")
+                var parsedata = JSON.parse(this.getnote().note)
+                this.quill.setContents(parsedata.ops)
+                clearTimeout(t)
+             },2500)
+          }
+          else{
+            console.log("printing ELSE")
+            this.quill.setContents(this.editdoc.data);
+          }
+
           this.quill.on('text-change', (delta, oldDelta, source)=> {
             if (source !== 'user') return;
             this.editdoc.submitOp(delta, {source:this.quill});
@@ -67,17 +82,28 @@ export default {
      update(op){
         this.quill.updateContents(op);
      },
-     connection(noteid,id){
-        if(this.editdoc.id == id)
-          return;
-        var doc = connection.get(noteid,id)
-        doc.fetch(()=>{
-          this.update(doc.data);
+     save(note){
+        this.saving = setInterval(() => {
+ 
+            var n = JSON.stringify(this.quill.getContents())
+            this.getnote().note = n 
+            this.$store.dispatch('savenote',this.getnote())
+
+        }, 8000)
+     },
+     getnote(){
+        var note = this.menulist.find((item, index, array)=>{
+                return item.idnote_list == this.id[1]
         })
-        this.editdoc = doc
+        console.log("Inside Function")
+        console.log(note)
+        return note
      }
     
-  }
+  },
+  beforeDestroy () {
+    clearInterval(this.saving)
+  },
 };
 </script>
 
