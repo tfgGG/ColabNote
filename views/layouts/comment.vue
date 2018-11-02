@@ -39,7 +39,6 @@
 <script>
 
 import ShareDB from 'sharedb/lib/client';
-import db  from '../../lib/getdata'
 import axios from 'axios'
 var socket = new WebSocket('ws://localhost:3000');
 var connection = new ShareDB.Connection(socket);
@@ -93,7 +92,7 @@ export default {
       
     },
     fetchdata: function(){
-       console.log("Created fetch data")
+       //console.log("Created fetch data")
     }
   }
 };
