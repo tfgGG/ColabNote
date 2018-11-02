@@ -2,20 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import hash from "../lib/hash"
-import db from '../lib/getdata'
 import { finished } from 'stream';
 //import { state } from 'fs';
-
+axios.defaults.baseURL = "http://localhost:8000/"
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
 
     state:{
-        user: db.getuser(),
+        user: {},
         noteid: null,
         commentlist:[],
         menulist:[],
-        current:"hI"
+        noteinfo:null
         //detail: db.getdetail()
     },
     getters: {
@@ -48,8 +47,6 @@ export const store = new Vuex.Store({
                 el.noteid = hash.hashes(el.noteid)
             })
             state.menulist = obj
-            
-            console.log(state.current)
             console.log("Mutation Menu"+ obj);
         },
         addmenulist:function(state,obj){
@@ -60,6 +57,9 @@ export const store = new Vuex.Store({
         savenote:function(state,obj){
             state.menulist[obj.list_num].note = obj.note
             console.log("FinishSaving")
+        },
+        getnoteinfo:function(state,obj){
+            state.noteinfo = obj
         }
     },
     actions:{
@@ -100,6 +100,28 @@ export const store = new Vuex.Store({
             })
             .catch(function (error) {
                 console.log("PUT Detail error"+ error);
+            });
+        },
+        getuser:(context)=>{
+            console.log("Inside Get User")
+            axios.get('/login/now/')
+            .then((response)=> {
+                console.log("Getting User")
+                console.log(response.data)     
+            })
+            .catch(function (error) {
+                console.log("Get User error"+ error);
+            });
+        },
+        getnoteinfo:(context,obj)=>{
+            axios.get('/upload/note/'+ hash.dec(obj)+'/')
+            .then((response)=> {
+                console.log("Getting Note Info")
+                console.log(response.data)  
+                context.commit("getnoteinfo",response.data[0])  
+            })
+            .catch(function (error) {
+                console.log("Get User error"+ error);
             });
         },
         changetitle:(context,obj)=>{

@@ -1,22 +1,22 @@
 <template>
     <div>
         
-        <div id="mySidenav" class="sidenav">
+       <!-- <div id="mySidenav" class="sidenav">
                
-        </div>
+        </div>-->
+        
         
         <div id="main" >
-            <div class='container fluid'>
-                <div class="row">
-                    <div class="col-md-9">
-                        <button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>
+            <div class='ui grid'>
+                    <div class="ten wide column">
+                        <!--<button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>-->
+                        <noteinfo v-bind:ids="ids"></noteinfo>
                         <editor v-bind:ids="ids"></editor>
                         <comment v-bind:ids="ids"></comment>
                     </div>
-                    <div class="col-md-3">
+                    <div class="six wide column">
                         <info v-bind:ids="ids"></info>
                     </div>
-                </div>
             </div>
         </div>    
             
@@ -28,13 +28,14 @@
 import comment from './layouts/comment.vue' 
 import info from './layouts/info.vue' 
 import editor from './layouts/editor.vue' 
+import noteinfo from './layouts/noteinfo.vue'
 
 export default {
     components:{
-        comment:comment,
+         noteinfo:noteinfo,
+         comment:comment,
          editor: editor,
          info:info
-       
     },
     data () {
         return {
@@ -69,9 +70,6 @@ export default {
             document.getElementById("mySidenav").style.width = "0"
             document.getElementById("main").style.marginLeft= "0"
             
-        },
-        showComment: function(){
-            console.log("show")
         },
 
     }

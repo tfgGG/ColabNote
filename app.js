@@ -91,7 +91,7 @@ function init(a,b){
     console.log("----a--b---")
 }*/
 
-axios.defaults.baseURL = "http://localhost:8000/"
+
 /*
 axios.get('/upload/RESTdetail/27/')
 .then((response)=> {
