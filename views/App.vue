@@ -5,19 +5,20 @@
                
         </div>-->
         
-        
+        <heads></heads>
         <div id="main" >
             <div class='ui grid'>
-                    <div class="ten wide column">
+                    <div class="five wide column">
+                        <info v-bind:ids="ids"></info>
+                        
+                    </div>
+                     <div class="eleven wide column">
                         <!--<button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>-->
                         <div class="ui grid">
                             <div class="sixteen wide column"><noteinfo v-bind:ids="ids"></noteinfo></div>
                             <div class="sixteen wide column"><editor v-bind:ids="ids"></editor></div>
                             <div class="sixteen wide column"><comment v-bind:ids="ids"></comment></div>
                         </div>
-                    </div>
-                    <div class="six wide column">
-                        <info v-bind:ids="ids"></info>
                     </div>
             </div>
         </div>    
@@ -31,13 +32,15 @@ import comment from './layouts/comment.vue'
 import info from './layouts/info.vue' 
 import editor from './layouts/editor.vue' 
 import noteinfo from './layouts/noteinfo.vue'
+import heads from './layouts/heads.vue'
 
 export default {
     components:{
          noteinfo:noteinfo,
          comment:comment,
          editor: editor,
-         info:info
+         info:info,
+         heads:heads
     },
     data () {
         return {
