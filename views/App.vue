@@ -10,9 +10,11 @@
             <div class='ui grid'>
                     <div class="ten wide column">
                         <!--<button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>-->
-                        <noteinfo v-bind:ids="ids"></noteinfo>
-                        <editor v-bind:ids="ids"></editor>
-                        <comment v-bind:ids="ids"></comment>
+                        <div class="ui grid">
+                            <div class="sixteen wide column"><noteinfo v-bind:ids="ids"></noteinfo></div>
+                            <div class="sixteen wide column"><editor v-bind:ids="ids"></editor></div>
+                            <div class="sixteen wide column"><comment v-bind:ids="ids"></comment></div>
+                        </div>
                     </div>
                     <div class="six wide column">
                         <info v-bind:ids="ids"></info>

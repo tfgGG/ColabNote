@@ -1,8 +1,10 @@
 <template>
 <div>
+  <div class="ui basic segment">
     <div ref="editor">
       
     </div>
+  </div>
 </div>
 </template>
 
@@ -34,20 +36,21 @@ export default {
   },
   created: function(){ 
      this.save()
-
+     this.$store.dispatch("getuser")
     
   },
   mounted: function(){
       
       this.editdoc = connection.get(this.id[0],this.id[1]);
       this.quill = new Quill(this.$refs.editor,{theme: 'snow'})
-      
+
       this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
-
+          
           //代表server turn on again 或 使用者本來就空的
           if(this.editdoc.data.ops.length == 0){
+             this.quill.setText("Data Loading.....    ")
              var t = setTimeout(()=>{
                 console.log("printing IF")
                 var parsedata = JSON.parse(this.getnote().note)
