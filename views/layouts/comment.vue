@@ -1,38 +1,39 @@
 <template>
 <div>
-    <div>
-       <div class="card">
-          <div class="card-body">
-            <div class="pull-left image" href="#">
-                <img class="avatar img-circle" src="http://localhost:8000/media/user1.jpg" alt="avatar">
+       <div class="ui comments">
+          <div class="comment">
+            <a class="avatar" href="#">
+                <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
+            </a>
+            <div class="content">
+                  <a class="author">{{ username }}</a>
+                  <div class="metadata">
+                  </div>
+                  <div class="text">
+                      <input type="text" v-model="comment" id="comment"><!--comment area-->
+                      <button type="button" class='ui basic button' v-on:click="send">Send</button>
+                  </div>
             </div>
-            <div class="comment-heading">
-                  <h4 class="user">{{user.name}}</h4>
+          </div>
+          <div class="comment" :key="item" v-for="item in commentlist">
+            <a class="avatar" href="#">
+                <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
+            </a>
+            <div class="content" href="#">
+                  <a class="author">{{item.username}}</a>
+                  <div class="metadata">
+                    <div class="date">2 days ago</div>
+                    <div class="rating">
+                      <i class="star icon"></i>
+                      5 Faves
+                    </div>
+                  </div>
+                   <div class="text">
+                      {{item.message}}
+                  </div>
             </div>
-            <input type="text" v-model="comment" id="comment"><!--comment area-->
-            <input type="button" value="Send" class='btn' v-on:click="send">
           </div>
       </div>
-    </div>
-    <div id="list">
-      <div class="card" v-for="item in commentlist">
-          <div class="card-body ">
-            <div class="pull-left" href="#">
-                <img class="avatar img-circle" :src="item.photo" alt="avatar">
-            </div>
-            <div class="comment-heading">
-                  <h4 class="user">{{item.user}}</h4>
-                  <h5 class="time">{{item.date}}</h5>
-            </div>
-            <p>{{item.comment}}</p>
-          </div>
-      </div>
-    </div>
-    <div class="card" >
-      <span v-for="item in detail">
-        {{detail}}
-      </span>
-    </div>
 </div>
 </template>
 
@@ -49,7 +50,8 @@ export default {
     return {
       comment:"",
       ids: "",
-      detail:[]
+      detail:[],
+      old:{}
     };
   },
   computed:{
@@ -59,21 +61,24 @@ export default {
     user(){
       return this.$store.state.user
     },
+    username(){
+      return this.$store.state.username 
+    }
   },
   created(){
     this.fetchdata()
   },
   mounted: function(){
 
-      cdoc = connection.get("comment",this.ids);
+      cdoc = connection.get("comment",this.ids[0]);
 
       const store = this.$store;
       cdoc.subscribe(function(err){
            if (err) throw err;
 
-        cdoc.on('op',function(op){
-          //console.log(cdoc);
-          store.dispatch("addcomment",cdoc.data.comment);
+        cdoc.on('op',(op)=>{
+            console.log(cdoc.data.comment)
+            store.commit("addcomment",cdoc.data.comment[0])
          });
       });
       
@@ -81,18 +86,25 @@ export default {
   methods: {
     send: function() {
       const d = new Date();
+      console.log("Time" + d.toLocaleTimeString())
       const comment=[];
       const obj = {
-        date: d.toLocaleTimeString(),
-        user: this.user.name,
-        comment: this.comment
+        note: this.ids[0],
+        user: this.user.user,
+        message: this.comment,
+        username:this.username
       }
+      
       console.log("send out");
-      cdoc.submitOp([{p: ['comment','0'], li:obj}]);
+      cdoc.submitOp([{p:['comment','1'], ld:this.old},{p: ['comment','0'], li:obj}]);
+      this.old = obj
+      //console.log(cdoc.data.comment)
+      this.$store.dispatch("addcomment",obj);
+     
       
     },
     fetchdata: function(){
-       //console.log("Created fetch data")
+       this.$store.dispatch("setcomment",this.ids[0])
     }
   }
 };
@@ -103,30 +115,5 @@ export default {
 .original-white {
   color: #fff;
 }
-.image{
-  display: inline;
-}
- .comment-heading {
-  display: block;
-  width: 100%;
-}
- .comment-heading .user {
-  font-size: 14px;
-  font-weight: bold;
-  display: inline;
-  margin-top: 0;
-  margin-right: 10px;
-}
- .comment-heading .time {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 0;
-  display: inline;
-}
-.avatar {
-  width: 60px;
-  height: 60px;
-  display: block;
-  margin-right: 15px;
-}
+
 </style>

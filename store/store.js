@@ -10,11 +10,18 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
 
     state:{
-        user: {},
+        user:{"idprofile": 31, 
+                "school": "ererc", 
+                "grade": 2,
+                 "birth": "2014-08-07", 
+                 "intro": "dfsbdaerb df \r\nasf asfb", 
+                 "img": "/media/images.jpg", "user": 37},
         noteid: null,
         commentlist:[],
         menulist:[],
-        noteinfo:null
+        noteinfo:null,
+        field:[],
+        username:'yyu'
         //detail: db.getdetail()
     },
     getters: {
@@ -30,12 +37,12 @@ export const store = new Vuex.Store({
     mutations:{
 
         addcomment:function(state,obj){
-            console.log("m")
-            console.log(obj)
-            state.commentlist.push(obj[0])
+            console.log("mutation Add Comment")
+            state.commentlist.push(obj)
+            console.log(state.commentlist)
         },
-        setcomment:function(state,id){
-            //console.log(state.detail)
+        setcomment:function(state,obj){
+            state.commentlist = obj
         },
         setnoteid:function(state,id){
             state.noteid = id;
@@ -60,17 +67,36 @@ export const store = new Vuex.Store({
         },
         getnoteinfo:function(state,obj){
             state.noteinfo = obj
+            state.field = obj.field.split(',')
+            console.log(state.field)
         }
     },
     actions:{
+        setcomment:function(context,obj){
+            axios.get('/upload/comment/'+ hash.dec(obj)+'/')
+            .then((response)=> {
+                //console.log(response.data)
+                context.commit("setcomment", response.data)    
+            })
+            .catch(function (error) {
+                console.log("Get Comment error"+ error);
+            });
+        },
         addcomment: function(context,obj){
-            context.commit("addcomment",obj)
-            db.postcomment(context.noteid,obj)
+            obj.note = hash.dec(obj.note)
+            console.log(obj)
+            axios.post('/upload/addComment/', obj)
+            .then((response)=> {
+                console.log("Saving Comment")
+                console.log(response.data)
+            })
+            .catch(function (error) {
+                console.log("Post Comment error"+ error);
+            });
         },
         setmenulist: (context,id)=>{
             axios.get('/upload/RESTdetail/'+ hash.dec(id) + "/")
                 .then((response)=> {
-                console.log("In ")
                 context.commit("setmenulist",response.data)
                 //context.menulist = response.data                   
                 })
@@ -90,12 +116,10 @@ export const store = new Vuex.Store({
         },
         savenote:(context,obj)=>{
            
-            console.log("BEFORE SAVING");
-            console.log(obj)
             axios.put('/upload/putdetail/'+ hash.dec(obj.noteid) +"/"+ obj.list_num, obj)
             .then((response)=> {
                 console.log("After saving")
-                console.log(response.data)
+                //console.log(response.data)
                 context.commit("savenote",response.data)       
             })
             .catch(function (error) {
@@ -103,14 +127,14 @@ export const store = new Vuex.Store({
             });
         },
         getuser:(context)=>{
-            console.log("Inside Get User")
+            //console.log("Inside Get User")
             axios.get('/login/now/')
             .then((response)=> {
-                console.log("Getting User")
-                console.log(response.data)     
+                //console.log("Getting User")
+                //console.log(response.data)     
             })
             .catch(function (error) {
-                console.log("Get User error"+ error);
+               // console.log("Get User error"+ error);
             });
         },
         getnoteinfo:(context,obj)=>{
@@ -125,7 +149,7 @@ export const store = new Vuex.Store({
             });
         },
         changetitle:(context,obj)=>{
-            console.log("Change Title"+ obj)
+            console.log("Change Title"+     obj)
         }
     }
 
