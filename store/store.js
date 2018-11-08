@@ -2,10 +2,14 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import hash from "../lib/hash"
+import {cat } from "../lib/cat"
 import { finished } from 'stream';
 //import { state } from 'fs';
 axios.defaults.baseURL = "http://localhost:8000/"
 Vue.use(Vuex)
+
+
+
 
 export const store = new Vuex.Store({
 
@@ -21,7 +25,8 @@ export const store = new Vuex.Store({
         menulist:[],
         noteinfo:null,
         field:[],
-        username:'yyu'
+        username:'yyu',
+        cat:cat
         //detail: db.getdetail()
     },
     getters: {
@@ -66,8 +71,24 @@ export const store = new Vuex.Store({
             console.log("FinishSaving")
         },
         getnoteinfo:function(state,obj){
+            console.log("Inside getnoteinfo")
+            var cata =  state.cat.subject[0].field
             state.noteinfo = obj
-            state.field = obj.field.split(',')
+            if(obj.field == "")
+                return;
+            for(var i=0;i<state.cat.subject.length-1;i++){
+                console.log("FORFOR")
+                console.log(cata)
+                cata = cata.concat(cat.subject[i+1].field)
+            }
+            
+            var temp = obj.field.split(',')
+            temp.forEach((el)=>{
+                var o = cata.find((item, index, array)=>{
+                    return el == item.value
+                })
+                state.field.push(o)
+            })
             console.log(state.field)
         }
     },

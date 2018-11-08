@@ -1,12 +1,11 @@
 <template>
 <div>
       <div class="ui basic segment">
-        <h3 class="ui left floated header">
-            {{noteinfo.title}}
+        <div class="ui left floated header">
+            <h3>{{noteinfo.title}}</h3>
             <div class="sub header">{{noteinfo.intro}}</div>
-            <a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a>
-
-        </h3>
+            <div class="sub header"><a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a></div>
+        </div>
         <div class="ui right floated header">
               <button class="samll ui blue basic button">Comment</button>
               <button class="small ui blue basic button">Planner</button>
@@ -15,21 +14,18 @@
 </div>
 </template>
 <script>
-import cat from '../../public/js/cat.json'
 export default {
   props:['ids'],
   data: function() { 
     return {
         ids: this.ids,
-        data:cat,
-        field:[]
     }
   },
   computed:{
     noteinfo(){
       return this.$store.state.noteinfo
     },
-    filed(){
+    field(){
       return this.$store.state.field
     }
   },
