@@ -6,11 +6,13 @@ var richText = require('rich-text');
 var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 var path = require('path')
-var axios = require('axios')
 var Hashids = require('hashids')
-require("@babel/polyfill");
+var fs = require('fs');
+//require("@babel/polyfill");
 //var S = require('./lib/utils')
 
+var editorhtml = fs.readFileSync("./views/Editor/main.html")
+var plannerhtml= fs.readFileSync("./views/Planner/main.html")
 
 var ShareDB = require('sharedb');
 var backend = new ShareDB();
@@ -44,7 +46,16 @@ app.get('/note/:noteid/1/',function(req,res,next){
 app.get('/note/:noteid/:id',function(req,res,next){
     createDoc(req.params.noteid,req.params.id)
     console.log(req.params.noteid +" "+req.params.id);
-    res.render('main',{layout:false})
+    res.writeHeader(200,{'Content-Type':'text/html'});
+    res.write(editorhtml); // response board.html
+    res.end();
+})
+
+app.get('/planner/:id',function(req,res,next){
+    
+    res.writeHeader(200,{'Content-Type':'text/html'});
+    res.write(plannerhtml); // response board.html
+    res.end();
 })
 
 app.use(function(req,res){

@@ -2,10 +2,13 @@ var path = require('path')
 var VueLoaderPlugin = require('vue-loader/lib/plugin')
 //var babelpolyfill = require("babel-polyfill");
 module.exports = {
-  entry: ["@babel/polyfill",'./views/main.js'], 
+  entry: {
+    Editor:'./views/Editor/main.js',
+    Planner:'./views/Planner/main.js'
+  },
   output: {
     path: path.join(__dirname, '/public/build/'),
-    filename: 'bundle.js'
+    filename: '[name].bundle.js'
   },
   module:{
     rules:[
@@ -46,7 +49,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      vue: 'vue/dist/vue.common.js'
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   plugins: [

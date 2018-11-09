@@ -28,11 +28,11 @@
 
 <script>
 // Imports
-import comment from './layouts/comment.vue' 
-import info from './layouts/info.vue' 
-import editor from './layouts/editor.vue' 
-import noteinfo from './layouts/noteinfo.vue'
-import heads from './layouts/heads.vue'
+import comment from './comment.vue' 
+import info from './info.vue' 
+import editor from './editor.vue' 
+import noteinfo from './noteinfo.vue'
+import heads from '../layouts/heads.vue'
 
 export default {
     components:{

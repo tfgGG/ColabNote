@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import hash from "../lib/hash"
-import {cat } from "../lib/cat"
+import hash from "../../lib/hash"
+import {cat } from "../../lib/cat"
 import { finished } from 'stream';
 //import { state } from 'fs';
 axios.defaults.baseURL = "http://localhost:8000/"
