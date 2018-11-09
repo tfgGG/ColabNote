@@ -1,6 +1,7 @@
 <template>
 <div>
   <div class="ui basic segment">
+    <h4>{{subtitle}}</h4>
     <div ref="editor">
       
     </div>
@@ -26,6 +27,7 @@ export default {
       saving:null,
       quill: null,
       editdoc:null,
+      subtitle:"THIS IS A　TEST"
 
     };
   },
@@ -98,8 +100,8 @@ export default {
         var note = this.menulist.find((item, index, array)=>{
                 return item.idnote_list == this.id[1]
         })
-        console.log("Inside Function")
-        console.log(note)
+        //console.log("Inside Function")
+        //console.log(note)
         return note
      }
     

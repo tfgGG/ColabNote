@@ -7,7 +7,7 @@
         
         <heads></heads>
         <div id="main" >
-            <div class='ui grid'>
+            <div class='ui grid container'>
                     <div class="five wide column">
                         <info v-bind:ids="ids"></info>
                         

@@ -4,19 +4,21 @@
             autofocus autocomplete="off"
             placeholder="Enter New Note title"
             v-model="newtitle">
-      <button type="button" @click="addNote" class="btn btn-primary" >New</button>
+      <button type="button" @click="addNote" class="ui button" >New</button>
       <section class="main" v-show="menulist.length" v-cloak>
-      <ul>
-        <li v-for="item in menulist"
+      <div class="ui large ordered list">
+        <div v-for="item in menulist"
             class="item"
             :key="item.idnote_list"
-            :class="{ editing: item == editeditem }">
+            :class="{ current: item == currents ,editing: item == editeditem }">
             
             <div class="view">
-              <a v-on:dblclick="editNote(item)" 
-                 v-bind:href="'http://localhost:3000/note/' + item.noteid + '/'+ item.idnote_list">
+              <label v-on:dblclick="editNote(item)"> 
                  {{ item.list_text }}
-              </a>
+              </label>
+              <button v-on:click="changepage( item.noteid,item.idnote_list)" class="ui Mini button">
+               ->
+              </button>
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
             <input class="edit" type="text"
@@ -25,38 +27,41 @@
               @blur="doneEdit(item)"
               @keyup.enter="doneEdit(item)"
               @keyup.esc="cancelEdit(item)">
-        </li>
-      </ul>
+        </div>
+      </div>
       </section>
-
       {{menulist}}
 </div>
 </template>
 
 <script>
 var hash = require("../../lib/hash.js")
+import $ from 'jquery'
 export default {
   props:['ids'],
   data: function() {
     return {
       newtitle:"",
       editeditem:"",
-      ids:""
+      ids:"",
+      currents:null
     }
   },
   computed:{
       menulist(){
         return this.$store.getters.menulist
       }
+
   },
   created: function(){ 
     
-     console.log("!!!!!Vue menu List!!!!!!")
      this.$store.dispatch('setmenulist', this.ids[0] )
-     //console.log("result of decode"+hash.dec("QbYKez"))
-    
+      this.$store.commit("setnoteid",this.ids)
   },
-  methods: {
+  methods:{
+    changepage(noteid,id){
+        document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id
+    },
     addNote(){
       var obj = {
         list_text:this.newtitle,
@@ -110,5 +115,12 @@ export default {
 }
 .editing .edit{
     display: block;
+}
+
+li{
+  list-style-type: none;
+}
+.current{
+    border-left: 2px steelblue solid
 }
 </style>
