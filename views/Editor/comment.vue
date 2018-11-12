@@ -77,6 +77,7 @@ export default {
            if (err) throw err;
 
         cdoc.on('op',(op)=>{
+           // console.log(op)
             console.log(cdoc.data.comment)
             store.commit("addcomment",cdoc.data.comment[0])
          });
@@ -96,8 +97,9 @@ export default {
       }
       
       console.log("send out");
-      cdoc.submitOp([{p:['comment','1'], ld:this.old},{p: ['comment','0'], li:obj}]);
-      this.old = obj
+      cdoc.submitOp([{p: ['comment','0'], li:obj}]);
+      //cdoc.submitOp([{p:['comment','key'], oi:obj}]);      
+      //this.old = obj
       //console.log(cdoc.data.comment)
       this.$store.dispatch("addcomment",obj);
      
