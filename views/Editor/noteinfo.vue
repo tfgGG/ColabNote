@@ -7,13 +7,33 @@
             <div class="sub header"><a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a></div>
         </div>
         <div class="ui right floated header">
-              <button class="samll ui blue basic button">Comment</button>
-              <button class="small ui blue basic button">Planner</button>
+              <div class="ui blue basic button" onclick="$('.ui.modal').modal('show');">Planner</div>
         </div>
       </div>
+      <div class="ui mini modal">
+        <div class="ui blue header">Add to Planner</div>
+        <div class="content">
+            <form class="ui form">
+              <div class="field">
+                <label>Group:</label>
+                <select class="ui dropdown group" name = "group">
+                      <option v-for="item in group" :key="item.idgroup" class="item" value="item.idgroup">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Plan:</label>
+                <select class="ui dropdown plan" name = "plan">
+                      <option v-for="item in plan" :key="item.idplan" class="item" value="item.idplan">{{item.name}}</option>
+                </select>
+              </div>
+            </form>
+        </div>
+      </div>
+
 </div>
 </template>
 <script>
+import $ from 'jquery'
 export default {
   props:['ids'],
   data: function() { 
@@ -27,18 +47,37 @@ export default {
     },
     field(){
       return this.$store.state.field
+    },
+    group(){
+      return this.$store.state.group
+    },
+    plan(){
+       return this.$store.state.plan
     }
   },
   created:function(){
 
+
     this.$store.dispatch("getnoteinfo",this.ids[0])
+    this.$store.dispatch("getgroup")
+   
+    
+  },
+  mounted:function(){
+
+      const store = this.$store
+      $('.group').change(()=>{
+         console.log("Inside detect")
+         console.log($( ".group" ).val())
+         store.dispatch('getplan',$( ".group" ).val())
+      })
     
   }
  
 };
 </script>
 
-<style>
+<style scoped>
 /* 樣式也可以包進來 ._. */
 .original-white {
   color: #fff;

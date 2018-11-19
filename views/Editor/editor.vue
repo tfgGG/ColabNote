@@ -1,8 +1,9 @@
 <template>
 <div>
+
   <div class="ui basic segment">
-    <h4>{{subtitle}}</h4>
-    <div ref="editor">
+    <!--<h4>{{subtitle}}</h4>-->
+    <div id="editor">
       
     </div>
   </div>
@@ -44,8 +45,7 @@ export default {
   mounted: function(){
       
       this.editdoc = connection.get(this.id[0],this.id[1]);
-      this.quill = new Quill(this.$refs.editor,{theme: 'snow'})
-
+      this.quill = new Quill('#editor', { modules: { toolbar: ['image','bold','color','font','header'] },theme: 'snow'});
       this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
@@ -112,6 +112,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+body{
+  background-color: white;
+}
 /* 樣式也可以包進來 ._. */
 </style>

@@ -1,26 +1,33 @@
 <template>
 <div>
-      <input class="newnote"
-            autofocus autocomplete="off"
-            placeholder="Enter New Note title"
-            v-model="newtitle">
-      <button type="button" @click="addNote" class="ui button" >New</button>
-      <section class="main" v-show="menulist.length" v-cloak>
-      <div class="ui large ordered list">
-        <div v-for="item in menulist"
+      <div class="ui secondary vertical menu">
+      <div class="item">
+        <input class="newnote ui input"
+              autofocus autocomplete="off"
+              placeholder="Enter New Note title"
+              v-model="newtitle">
+        <button type="button" @click="addNote" class="ui fluid button" >New</button>
+      </div>
+       
+      <!--<section class="main" v-show="menulist.length" v-cloak>-->
+
+        <div v-for="(item,index) in menulist"
             class="item"
             :key="item.idnote_list"
             :class="{ current: item == currents ,editing: item == editeditem }">
             
             <div class="view">
               <label v-on:dblclick="editNote(item)"> 
-                 {{ item.list_text }}
+                 <h4>{{index + 1}}. {{ item.list_text }}
+  
+
+                 </h4>
               </label>
-              <button v-on:click="changepage( item.noteid,item.idnote_list)" class="ui Mini button">
-               ->
-              </button>
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
+              <button class="ui mini icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
+                  <i class="angle right icon"></i>
+              </button> 
             <input class="edit" type="text"
               v-model="item.list_text"
               v-todo-focus="item == editeditem"
@@ -28,9 +35,9 @@
               @keyup.enter="doneEdit(item)"
               @keyup.esc="cancelEdit(item)">
         </div>
+      <!--</section>-->
+      <!--{{menulist}}-->
       </div>
-      </section>
-      {{menulist}}
 </div>
 </template>
 
@@ -80,7 +87,7 @@ export default {
       if (!item.list_text) {
         item.list_text="Edit Here"
       }
-      this.$store.dispatch("changetitle",item.list_text)
+      this.$store.dispatch("changetitle",item)
     },
     cancelEdit(){
 
@@ -100,7 +107,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* 樣式也可以包進來 ._. */
 .original-white {
   color: #fff;
@@ -122,5 +129,9 @@ li{
 }
 .current{
     border-left: 2px steelblue solid
+}
+
+body{
+  background-color:#F2F2F2;
 }
 </style>

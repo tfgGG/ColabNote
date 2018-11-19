@@ -51,8 +51,9 @@ app.get('/note/:noteid/:id',function(req,res,next){
     res.end();
 })
 
-app.get('/planner/:id',function(req,res,next){
+app.get('/message/:id',function(req,res,next){
     
+    createMessageDoc(req.params.id)
     res.writeHeader(200,{'Content-Type':'text/html'});
     res.write(plannerhtml); // response board.html
     res.end();
@@ -89,6 +90,20 @@ function createDoc(noteid,id)
       }
     });
     console.log("comment"+commentdoc.id+ " "+　noteid+ doc.id);
+}
+function createMessageDoc(teamid){
+
+    var connection = backend.connect();
+    var mdoc = connection.get('message', "h");
+    console.log(teamid)
+
+    mdoc.fetch(function(err) {
+        if (err) throw err;
+        if (mdoc.type === null) {
+            mdoc.create({message:[]});
+        return;
+      }
+    });
 }
 
 /*

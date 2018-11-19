@@ -1,24 +1,23 @@
 <template>
     <div>
+       <heads></heads>
+       <div id="mySidenav" class="sidenav">
+               <comment v-bind:ids="ids"></comment>
+        </div>
         
-       <!-- <div id="mySidenav" class="sidenav">
-               
-        </div>-->
         
-        <heads></heads>
         <div id="main" >
+            <button class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>
             <div class='ui grid container'>
-                    <div class="five wide column">
-                        <info v-bind:ids="ids"></info>
-                        
-                    </div>
-                     <div class="eleven wide column">
-                        <!--<button id="open" class="btn btn-default" v-on:click= "openNav" >三</button>-->
+                    <div class="eleven wide column">                    
                         <div class="ui grid">
                             <div class="sixteen wide column"><noteinfo v-bind:ids="ids"></noteinfo></div>
                             <div class="sixteen wide column"><editor v-bind:ids="ids"></editor></div>
-                            <div class="sixteen wide column"><comment v-bind:ids="ids"></comment></div>
                         </div>
+                        
+                    </div>
+                     <div class="five wide column">
+                        <info v-bind:ids="ids"></info>
                     </div>
             </div>
         </div>    
@@ -62,8 +61,8 @@ export default {
             console.log("OpenNav")
             if(this.toogle=="0")
             {
-                document.getElementById("mySidenav").style.width = "250px"
-                document.getElementById("main").style.marginLeft = "250px"
+                document.getElementById("mySidenav").style.width = "350px"
+                document.getElementById("main").style.marginLeft = "350px"
                 this.toogle = "1"
             }else{
                 this.closeNav()
@@ -85,6 +84,7 @@ export default {
 body{
     margin: 0;
     font-family: 'Nunito SemiBold';
+
 }
 #editor{
     height:100%;
@@ -101,7 +101,7 @@ body{
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #dce2ed;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;

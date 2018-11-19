@@ -26,7 +26,9 @@ export const store = new Vuex.Store({
         noteinfo:null,
         field:[],
         username:'yyu',
-        cat:cat
+        cat:cat,
+        group:[],
+        plan:[],
         //detail: db.getdetail()
     },
     getters: {
@@ -77,8 +79,6 @@ export const store = new Vuex.Store({
             if(obj.field == "")
                 return;
             for(var i=0;i<state.cat.subject.length-1;i++){
-                console.log("FORFOR")
-                console.log(cata)
                 cata = cata.concat(cat.subject[i+1].field)
             }
             
@@ -90,6 +90,15 @@ export const store = new Vuex.Store({
                 state.field.push(o)
             })
             console.log(state.field)
+        },
+        getgroup:function(state,obj){
+            state.group = obj
+        },
+        getplan:function(state,obj){
+            state.plan= obj
+        },
+        changetitle:function(state,obj){
+            console.log(obj)
         }
     },
     actions:{
@@ -140,7 +149,7 @@ export const store = new Vuex.Store({
             axios.put('/upload/putdetail/'+ hash.dec(obj.noteid) +"/"+ obj.list_num, obj)
             .then((response)=> {
                 console.log("After saving")
-                //console.log(response.data)
+                console.log(response.data)
                 context.commit("savenote",response.data)       
             })
             .catch(function (error) {
@@ -170,7 +179,37 @@ export const store = new Vuex.Store({
             });
         },
         changetitle:(context,obj)=>{
-            console.log("Change Title"+     obj)
+            axios.patch('/upload/putdetail/'+ hash.dec(obj.noteid)+"/"+ obj.list_num, {"list_text": obj.list_text})
+            .then((response)=> {
+                console.log("Patching Note Title")
+                console.log(response.data)  
+                context.commit("changetitle",response.data)  
+            })
+            .catch(function (error) {
+                console.log("Patching Error error"+ error);
+            });
+        },
+        getgroup:(context,obj)=>{
+            axios.get('/person/Group/'+context.state.user.user+'/')
+            .then((response)=> {
+                console.log("Getting Group")
+                console.log(response.data)  
+                context.commit("getgroup",response.data)  
+            })
+            .catch(function (error) {
+                console.log("Get User error"+ error);
+            });
+        },
+        getplan:(context,obj)=>{
+            axios.get('/person/Plan/'+obj+'/')
+            .then((response)=> {
+                console.log("Getting Plan")
+                console.log(response.data)  
+                context.commit("getgroup",response.data)  
+            })
+            .catch(function (error) {
+                console.log("Get User error"+ error);
+            });
         }
     }
 

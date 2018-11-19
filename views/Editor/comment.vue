@@ -15,7 +15,7 @@
                   </div>
             </div>
           </div>
-          <div class="comment" :key="item" v-for="item in commentlist">
+          <div class="comment" :key="item" v-for="item in commentlist" style="margin-right:0px;">
             <a class="avatar" href="#">
                 <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
             </a>
