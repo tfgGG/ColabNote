@@ -4,8 +4,8 @@
             <div class="item">
               <img src="">
             </div>
-            <a class="item" href="http://localhost:8000/person/index/">MyPage</a>
-            <a class="item" href = "http://localhost:8000/upload/index/ ">Notes</a> 
+            <a class="item" href="http://140.136.150.93/person/index/">MyPage</a>
+            <a class="item" href = "http://140.136.150.93/upload/index/ ">Notes</a> 
 
             <a class="right item" href="">
                 <button class="ui blue basic button"><i class="user icon"></i>Sign-in</button>
@@ -28,6 +28,11 @@
 
 <script>
 export default {
+    data(){
+        return{
+            url: "http://140.136.150.93/"
+        }
+    },
     computed:{
 
     }

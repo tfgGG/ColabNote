@@ -5,7 +5,8 @@ import hash from "../../lib/hash"
 import {cat } from "../../lib/cat"
 import { finished } from 'stream';
 //import { state } from 'fs';
-axios.defaults.baseURL = "http://localhost:8000/"
+//axios.defaults.baseURL = "http://localhost:8000/" 
+axios.defaults.baseURL = "http://140.136.150.93/"
 Vue.use(Vuex)
 
 

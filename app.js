@@ -18,12 +18,14 @@ var ShareDB = require('sharedb');
 var backend = new ShareDB();
 ShareDB.types.register(richText.type);
 
+app.set('ip', '140.136.150.93')
 app.set('views', path.join(__dirname, '/views'))
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 app.set('port',process.env.PORT||3000);
 app.use(express.static(__dirname +'/public'))
 app.use(cors());
+
 var server = app.listen(app.get('port'));
 //var io = require('socket.io')(server);
 
