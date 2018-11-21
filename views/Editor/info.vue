@@ -10,18 +10,16 @@
       </div>
        
       <!--<section class="main" v-show="menulist.length" v-cloak>-->
-
+      <div class="ui divided list">
         <div v-for="(item,index) in menulist"
             class="item"
             :key="item.idnote_list"
             :class="{ current: item == currents ,editing: item == editeditem }">
             
-            <div class="view">
+            <div class="view content">
               <label v-on:dblclick="editNote(item)"> 
-                 <h4>{{index + 1}}. {{ item.list_text }}
-  
-
-                 </h4>
+                 <a class="header">{{index + 1}}. {{ item.list_text }}
+                 </a>
               </label>
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
@@ -35,6 +33,7 @@
               @keyup.enter="doneEdit(item)"
               @keyup.esc="cancelEdit(item)">
         </div>
+      </div>
       <!--</section>-->
       <!--{{menulist}}-->
       </div>
@@ -45,13 +44,14 @@
 var hash = require("../../lib/hash.js")
 import $ from 'jquery'
 export default {
-  props:['ids'],
+  props:['ids','mode'],
   data: function() {
     return {
       newtitle:"",
       editeditem:"",
       ids:"",
-      currents:null
+      currents:null,
+      mode:this.mode[0]
     }
   },
   computed:{
@@ -67,7 +67,12 @@ export default {
   },
   methods:{
     changepage(noteid,id){
+        if(this.mode == 'frame'){
+        document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id+ "?p=frame"
+        }
+        else{
         document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id
+        }
     },
     addNote(){
       var obj = {

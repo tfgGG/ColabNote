@@ -1,16 +1,16 @@
 <template>
     <div>
-       <heads></heads>
-       
+        <div v-if="mode != 'frame'">
+        <heads></heads>
         <comment v-bind:ids="ids" id="mySidenav" class="sidenav" ></comment>
+        </div>
         
-        
-        <div id="main" >
-            <button class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>
+        <div id="main"  v-if="mode!= 'frame'">
+            <button  class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>
             <div class='ui grid container'>
                     <div class="eleven wide column">                    
                         <div class="ui grid">
-                            <div class="sixteen wide column"><noteinfo v-bind:ids="ids" v-bind:mode="mode"></noteinfo></div>
+                            <div  class="sixteen wide column"><noteinfo v-bind:ids="ids" v-bind:mode="mode"></noteinfo></div>
                             <div class="sixteen wide column"><editor v-bind:ids="ids"  v-bind:mode="mode"></editor></div>
                         </div>
                         
@@ -20,6 +20,16 @@
                     </div>
             </div>
         </div>    
+        <div v-if="mode=='frame'" class='ui grid'>
+            <div class="eleven wide column">                    
+                    <div class="sixteen wide column"><editor v-bind:ids="ids"  v-bind:mode="mode"></editor></div>
+                        
+            </div>        
+                
+                     <div class="five wide column">
+                        <info v-bind:ids="ids"  v-bind:mode="mode"></info>
+                    </div>
+        </div>
             
     </div>
 </template>
