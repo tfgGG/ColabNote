@@ -1,9 +1,8 @@
 <template>
     <div>
        <heads></heads>
-       <div id="mySidenav" class="sidenav">
-               <comment v-bind:ids="ids"></comment>
-        </div>
+       
+        <comment v-bind:ids="ids" id="mySidenav" class="sidenav" ></comment>
         
         
         <div id="main" >
@@ -11,13 +10,13 @@
             <div class='ui grid container'>
                     <div class="eleven wide column">                    
                         <div class="ui grid">
-                            <div class="sixteen wide column"><noteinfo v-bind:ids="ids"></noteinfo></div>
-                            <div class="sixteen wide column"><editor v-bind:ids="ids"></editor></div>
+                            <div class="sixteen wide column"><noteinfo v-bind:ids="ids" v-bind:mode="mode"></noteinfo></div>
+                            <div class="sixteen wide column"><editor v-bind:ids="ids"  v-bind:mode="mode"></editor></div>
                         </div>
                         
                     </div>
                      <div class="five wide column">
-                        <info v-bind:ids="ids"></info>
+                        <info v-bind:ids="ids"  v-bind:mode="mode"></info>
                     </div>
             </div>
         </div>    
@@ -45,6 +44,7 @@ export default {
         return {
             ids:[],
             toogle: "0",
+            mode:''
         }
     },
     created: function() {
@@ -52,8 +52,8 @@ export default {
         const word = window.location.pathname.split('/');
         this.ids.push( word[2])
         this.ids.push( word[3])
-        console.log(this.ids);
-        
+        var urlParams = new URLSearchParams(window.location.search);
+        this.mode = urlParams.getAll('p')  
     },
     methods: {
 
@@ -98,41 +98,21 @@ body{
     height: 100%;
     width: 0;
     position: fixed;
+    display:block;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #dce2ed;
+    background-color:white;
     overflow-x: hidden;
+    overflow-y: hidden;
     transition: 0.5s;
-    padding-top: 60px;
-}
-
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidenav a:hover {
-    color: #f1f1f1;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
+    border: 1px #B4BABD solid;
 }
 #main {
     transition: margin-left .5s;
     padding: 16px;
 }
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
 
