@@ -99,7 +99,8 @@ export const store = new Vuex.Store({
         },
         changetitle:function(state,obj){
             console.log(obj)
-        }
+        },
+      
     },
     actions:{
         setcomment:function(context,obj){
@@ -209,6 +210,16 @@ export const store = new Vuex.Store({
             })
             .catch(function (error) {
                 console.log("Get User error"+ error);
+            });
+        },
+        chat:(context,obj)=>{
+            axios.post('/person/chat/'+obj.teamid, obj)
+            .then((response)=> {
+                console.log(response.data)
+                //context.commit("addmenulist",response.data)       
+            })
+            .catch(function (error) {
+                console.log("Post Detail error"+ error);
             });
         }
     }
