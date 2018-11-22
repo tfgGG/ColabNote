@@ -14,24 +14,24 @@
         <div v-for="(item,index) in menulist"
             class="item"
             :key="item.idnote_list"
-            :class="{ current: item == currents ,editing: item == editeditem }">
+            :class="{editing: item == editeditem }">
             
-            <div class="view content">
-              <label v-on:dblclick="editNote(item)"> 
-                 <a class="header">{{index + 1}}. {{ item.list_text }}
-                 </a>
+            <div class="view content" :class="{currents: item.idnote_list == ids[1] , not:item.idnote_list != ids[1]}">
+              <label v-on:dblclick="editNote(item)" > 
+                {{index + 1}}. {{ item.list_text }} 
               </label>
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
-              <button class="ui mini icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
-                  <i class="angle right icon"></i>
-              </button> 
+
             <input class="edit" type="text"
               v-model="item.list_text"
               v-todo-focus="item == editeditem"
               @blur="doneEdit(item)"
               @keyup.enter="doneEdit(item)"
               @keyup.esc="cancelEdit(item)">
+              <button class="ui mini icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
+                  <i class="angle right icon"></i>
+              </button> 
         </div>
       </div>
       <!--</section>-->
@@ -132,11 +132,15 @@ export default {
 li{
   list-style-type: none;
 }
-.current{
-    border-left: 2px steelblue solid
+.currents{
+    border-right: 3px solid #787C7D;
+    color: black;
+    font-weight: bolder;
+    font-size: 18px;
 }
-
-body{
-  background-color:#F2F2F2;
+.not{
+  color: #787F80;
+  font-weight: bold;
+  font-size: 16px;
 }
 </style>
