@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="ui grid chat">
+    <div class="chat">
         <div class="chatbox">
 		<div class="chatlogs">
 		    <div v-for="(item,index) in list" 
@@ -51,9 +51,14 @@ export default {
         return{
             list:[],
             message:"",
-            status:0, // someone else push the comment
+			status:0, // someone else push the comment
+			teamid:''
         } 
-    },
+	},
+	created:function(){
+		var array = window.location.pathname.split('/')
+		this.teamid = array[2]
+	},
     mounted:function(){
 
       mdoc = connection.get("message",'h');
@@ -75,11 +80,13 @@ export default {
     methods:{
         send(){
             var obj = {
-                message:this.message,
-                user:"yyu",
+                text:this.message,
+				userid:"37",
+				time: Date.now(),
+				teamid:this.teamid
             }
             this.message=''
-			//this.$store.dispatch("savemessage",obj)
+			this.$store.dispatch("chat",obj)
             mdoc.submitOp([{p: ['message','0'], li:obj}]);
         }
         

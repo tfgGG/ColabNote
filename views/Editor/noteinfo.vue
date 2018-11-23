@@ -2,13 +2,14 @@
 <div>
       <div class="ui basic segment">
         <div class="ui left floated header">
-            <h3>{{noteinfo.title}}</h3>
+            <h3 class="ui header">
+                {{noteinfo.title}}
+                 <div class="ui blue icon button right floated" onclick="$('.ui.modal').modal('show');"><i class="columns icon"></i></div>
+            </h3>
             <div class="sub header">{{noteinfo.intro}}</div>
             <div class="sub header"><a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a></div>
         </div>
-        <div class="ui right floated header">
-              <div class="ui blue basic button" onclick="$('.ui.modal').modal('show');">Planner</div>
-        </div>
+
       </div>
       <div class="ui mini modal">
         <div class="ui blue header">Add to Planner</div>
@@ -18,12 +19,6 @@
                 <label>Group:</label>
                 <select class="ui dropdown group" name = "group">
                       <option v-for="item in group" :key="item.idgroup" class="item" value="item.idgroup">{{item.name}}</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>Plan:</label>
-                <select class="ui dropdown plan" name = "plan">
-                      <option v-for="item in plan" :key="item.idplan" class="item" value="item.idplan">{{item.name}}</option>
                 </select>
               </div>
             </form>

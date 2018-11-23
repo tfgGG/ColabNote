@@ -3,7 +3,7 @@
 
   <div class="ui basic segment">
     <!--<h4>{{subtitle}}</h4>-->
-    <div id="editor">
+    <div id="editor" :class="{ view: this.mode == 'view'}">
       
     </div>
   </div>
@@ -20,7 +20,7 @@ const socket = new WebSocket('ws://localhost:3000');
 const connection = new ShareDB.Connection(socket);
 ShareDB.types.register(richText.type);
 export default {
-  props:["ids"],
+  props:["ids",'mode'],
   data() {
     return {
       id:this.ids,
@@ -28,8 +28,8 @@ export default {
       saving:null,
       quill: null,
       editdoc:null,
-      subtitle:"THIS IS A　TEST"
-
+      subtitle:"THIS IS A TEST",
+      mode: this.mode[0]
     };
   },
    computed:{
@@ -40,12 +40,20 @@ export default {
   created: function(){ 
      this.save()
      this.$store.dispatch("getuser")
+     console.log("MODE:"+this.mode)
     
   },
   mounted: function(){
       
+      console.log(this.mode)
       this.editdoc = connection.get(this.id[0],this.id[1]);
-      this.quill = new Quill('#editor', { modules: { toolbar: ['image','bold','color','font','header'] },theme: 'snow'});
+      if(this.mode == 'view')
+      {
+        this.quill = new Quill('#editor',{readOnly: true,theme: 'bubble'})
+
+      }else{
+        this.quill = new Quill('#editor', { modules: { toolbar: ['image','bold','color','font','header'] },theme: 'snow'});
+      }
       this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
@@ -115,6 +123,11 @@ export default {
 <style scoped>
 body{
   background-color: white;
+}
+
+.view{
+  border-radius: 3px;
+  border: 1px solid #A8B0B7
 }
 /* 樣式也可以包進來 ._. */
 </style>

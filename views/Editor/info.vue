@@ -10,31 +10,30 @@
       </div>
        
       <!--<section class="main" v-show="menulist.length" v-cloak>-->
-
+      <div class="ui divided list">
         <div v-for="(item,index) in menulist"
             class="item"
             :key="item.idnote_list"
-            :class="{ current: item == currents ,editing: item == editeditem }">
+            :class="{editing: item == editeditem }">
             
-            <div class="view">
-              <label v-on:dblclick="editNote(item)"> 
-                 <h4>{{index + 1}}. {{ item.list_text }}
-  
-
-                 </h4>
+            <div class="view content" :class="{currents: item.idnote_list == ids[1] , not:item.idnote_list != ids[1]}">
+              <label v-on:dblclick="editNote(item)" > 
+                {{index + 1}}. {{ item.list_text }} 
               </label>
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
-              <button class="ui mini icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
-                  <i class="angle right icon"></i>
-              </button> 
+
             <input class="edit" type="text"
               v-model="item.list_text"
               v-todo-focus="item == editeditem"
               @blur="doneEdit(item)"
               @keyup.enter="doneEdit(item)"
               @keyup.esc="cancelEdit(item)">
+              <button class="ui mini icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
+                  <i class="angle right icon"></i>
+              </button> 
         </div>
+      </div>
       <!--</section>-->
       <!--{{menulist}}-->
       </div>
@@ -45,13 +44,14 @@
 var hash = require("../../lib/hash.js")
 import $ from 'jquery'
 export default {
-  props:['ids'],
+  props:['ids','mode'],
   data: function() {
     return {
       newtitle:"",
       editeditem:"",
       ids:"",
-      currents:null
+      currents:null,
+      mode:this.mode[0]
     }
   },
   computed:{
@@ -67,7 +67,12 @@ export default {
   },
   methods:{
     changepage(noteid,id){
+        if(this.mode == 'frame'){
+        document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id+ "?p=frame"
+        }
+        else{
         document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id
+        }
     },
     addNote(){
       var obj = {
@@ -127,11 +132,15 @@ export default {
 li{
   list-style-type: none;
 }
-.current{
-    border-left: 2px steelblue solid
+.currents{
+    border-right: 3px solid #787C7D;
+    color: black;
+    font-weight: bolder;
+    font-size: 18px;
 }
-
-body{
-  background-color:#F2F2F2;
+.not{
+  color: #787F80;
+  font-weight: bold;
+  font-size: 16px;
 }
 </style>

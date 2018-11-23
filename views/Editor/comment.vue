@@ -1,39 +1,34 @@
 <template>
 <div>
-       <div class="ui comments">
-          <div class="comment">
-            <a class="avatar" href="#">
-                <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
-            </a>
-            <div class="content">
-                  <a class="author">{{ username }}</a>
-                  <div class="metadata">
-                  </div>
-                  <div class="text">
-                      <input type="text" v-model="comment" id="comment"><!--comment area-->
-                      <button type="button" class='ui basic button' v-on:click="send">Send</button>
-                  </div>
-            </div>
-          </div>
-          <div class="comment" :key="item" v-for="item in commentlist" style="margin-right:0px;">
-            <a class="avatar" href="#">
-                <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
-            </a>
-            <div class="content" href="#">
-                  <a class="author">{{item.username}}</a>
-                  <div class="metadata">
-                    <div class="date">2 days ago</div>
-                    <div class="rating">
-                      <i class="star icon"></i>
-                      5 Faves
-                    </div>
-                  </div>
-                   <div class="text">
-                      {{item.message}}
-                  </div>
+    <div clas="ui segment" style=" display:block;height:100%;">
+      <h3 class="ui block center aligned header" style="color:white; background-color: #3C8BDA;">Comment Area</h3>
+      <div class="ui grid centered" style="overflow-y:scroll; height:85%;">
+          <div class="sixteen wide column">
+            <div class="ui comments">
+              <div class="comment" :key="item" v-for="item in commentlist">
+                <a class="avatar" href="#">
+                    <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
+                </a>
+                <div class="content" href="#">
+                      <a class="author">{{item.username}}</a>
+                      <div class="metadata">
+                        <div class="date">2 days ago</div>
+                      </div>
+                      <div class="text">
+                          {{item.message}}
+                      </div>
+                </div>
+              </div>
             </div>
           </div>
       </div>
+      <h4 class="ui bottom attached  block header">
+          <div class="ui input">
+          <input type="text" v-model="comment" id="comment"><!--comment area-->
+          </div>
+          <button type="button" class='ui basic button' v-on:click="send">Send</button>
+      </h4>
+    </div>
 </div>
 </template>
 
