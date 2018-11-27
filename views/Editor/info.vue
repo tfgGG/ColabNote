@@ -51,7 +51,7 @@ export default {
       editeditem:"",
       ids:"",
       currents:null,
-      mode:this.mode[0]
+      mode:this.mode[0],
     }
   },
   computed:{
@@ -67,11 +67,12 @@ export default {
   },
   methods:{
     changepage(noteid,id){
+        
         if(this.mode == 'frame'){
-        document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id+ "?p=frame"
+        document.location.href = 'http://'+ document.location.hostname + '/note/'+ noteid + "/" + id+ "?p=frame"
         }
         else{
-        document.location.href = 'http://localhost:3000/note/'+ noteid + "/" + id
+        document.location.href = 'http://'+ document.location.hostname + '/note/'+ noteid + "/" + id
         }
     },
     addNote(){
