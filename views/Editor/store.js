@@ -221,6 +221,16 @@ export const store = new Vuex.Store({
             .catch(function (error) {
                 console.log("Post Detail error"+ error);
             });
+        },
+        groupnote:(context,obj)=>{
+            axios.patch("/upload/groupnote/"+hash.dec(obj.noteid),{'permission':obj.permission})
+            .then((response)=> {
+                console.log(response.data)
+                //context.commit("addmenulist",response.data)       
+            })
+            .catch(function (error) {
+                console.log("Put GroupNote Permission error"+ error);
+            });
         }
     }
 

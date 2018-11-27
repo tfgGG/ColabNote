@@ -14,14 +14,15 @@
       <div class="ui mini modal">
         <div class="ui blue header">Add to Planner</div>
         <div class="content">
-            <form class="ui form">
+          
               <div class="field">
                 <label>Group:</label>
-                <select class="ui dropdown group" name = "group">
-                      <option v-for="item in group" :key="item.idgroup" class="item" value="item.idgroup">{{item.name}}</option>
+                <select class="ui dropdown group" name = "group" v-model="selected">
+                      <option v-for="item in group" :key="item.idgroup" class="item" v-bind:value="item.idgroup">{{item.name}}</option>
                 </select>
+                <button @click="addgroup()">Add to group</button>
               </div>
-            </form>
+         
         </div>
       </div>
 
@@ -34,6 +35,7 @@ export default {
   data: function() { 
     return {
         ids: this.ids,
+        selected:''
     }
   },
   computed:{
@@ -64,9 +66,16 @@ export default {
       $('.group').change(()=>{
          console.log("Inside detect")
          console.log($( ".group" ).val())
-         store.dispatch('getplan',$( ".group" ).val())
       })
     
+  },
+  methods:{
+
+    addgroup(){
+      var team = this.selected
+      this.$store.dispatch("groupnote",{'permission':team, 'noteid': this.ids[0]})
+    }
+
   }
  
 };

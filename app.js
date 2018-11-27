@@ -7,10 +7,20 @@ var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
 var path = require('path')
 var Hashids = require('hashids')
+var axios = require('axios')
 var fs = require('fs');
 //require("@babel/polyfill");
 //var S = require('./lib/utils')
-
+var ClientOAuth2 = require('client-oauth2')
+ 
+var githubAuth = new ClientOAuth2({
+  clientId: 'gJzg99w4Trm42aN6R9GZbG9cyCxChnSMOehQw5sn',
+  clientSecret: 'sDzhWOmUPiCRM4eHvkNWftRy4DQv1Pkt726xxK08rcAmAmQlyPPVqSVoQdZ3iiIf0KJ5Ie7vUfhpjcJJzvf4OXGe8stgsmVIwxu9pwWPWGnlNryxUYMNJGLvt6jyLwnb',
+  accessTokenUri: 'http://localhost:8000/o/token/',
+  authorizationUri: 'http://localhost:8000/o/authorize/',
+  redirectUri: 'http://localhost:3000/auth/github/callback',
+  scopes: ['notifications', 'gist']
+})
 var editorhtml = fs.readFileSync("./views/Editor/main.html")
 var plannerhtml= fs.readFileSync("./views/Planner/main.html")
 
@@ -33,6 +43,59 @@ wss.on('connection', function(ws, req) {
   backend.listen(stream);
 });
 
+
+app.get('/auth/github', function (req, res) {
+    var uri = githubAuth.code.getUri()
+    res.redirect(uri)
+})
+   
+app.get('/auth/github/callback', function (req, res) {
+    console.log("CALLBACK")
+    githubAuth.code.getToken(req.originalUrl)
+      .then(function (user) {
+        console.log("USER")
+        console.log(user) //=> { accessToken: '...', tokenType: 'bearer', ... }
+        axios.defaults.headers = {'Authorization' :"Bearer "+user.accessToken};
+        // Refresh the current users access token.
+        user.refresh().then(function (updatedUser) {
+          console.log(updatedUser !== user) //=> true
+          console.log(updatedUser.accessToken)
+        })
+   
+        // Sign API requests on behalf of the current user.
+        user.sign({
+          method: 'get',
+          url: 'http://localhost:8000/person/profile/'
+        })
+        
+        console.log(axios.defaults)
+        /*axios.get('http://localhost:8000/person/profile/',{ headers: { Authorization: "Bearer " + user.accessToken }}).then(response => {
+            // If request is good...
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.log('error 3 ' + error);
+          });*/
+        // We should store the token into a database.
+        return res.send(user.accessToken)
+      })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+app.get('/', function (req, res) {
+    res.send('Hello World!');
+});
+  
 app.get('/note/:noteid/1/',function(req,res,next){
     var hashids = new Hashids("",6)
     var newhash1 = hashids.encode(req.params.noteid)
