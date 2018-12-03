@@ -15,21 +15,17 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
 
     state:{
-        user:{"idprofile": 31, 
-                "school": "ererc", 
-                "grade": 2,
-                 "birth": "2014-08-07", 
-                 "intro": "dfsbdaerb df \r\nasf asfb", 
-                 "img": "/media/images.jpg", "user": 37},
+        user:null,
         noteid: null,
         commentlist:[],
         menulist:[],
         noteinfo:null,
         field:[],
-        username:'yyu',
+        username: "XXXXXXX",
         cat:cat,
         group:[],
         plan:[],
+        login: false
         //detail: db.getdetail()
     },
     getters: {
@@ -62,7 +58,6 @@ export const store = new Vuex.Store({
                 el.noteid = hash.hashes(el.noteid)
             })
             state.menulist = obj
-            console.log("Mutation Menu"+ obj);
         },
         addmenulist:function(state,obj){
             obj.idnote_list = hash.hashes(obj.noteid*100 + obj.list_num)
@@ -75,22 +70,24 @@ export const store = new Vuex.Store({
         },
         getnoteinfo:function(state,obj){
             console.log("Inside getnoteinfo")
-            var cata =  state.cat.subject[0].field
+            console.log(obj)
             state.noteinfo = obj
+            /*
+            var cata =  state.cat.subject[0].field
             if(obj.field == "")
                 return;
             for(var i=0;i<state.cat.subject.length-1;i++){
                 cata = cata.concat(cat.subject[i+1].field)
             }
             
-            var temp = obj.field.split(',')
+            var temp = obj.field.split(' ')
             temp.forEach((el)=>{
                 var o = cata.find((item, index, array)=>{
                     return el == item.value
                 })
                 state.field.push(o)
-            })
-            console.log(state.field)
+            })*/
+            
         },
         getgroup:function(state,obj){
             state.group = obj
@@ -101,6 +98,11 @@ export const store = new Vuex.Store({
         changetitle:function(state,obj){
             console.log(obj)
         },
+        GetUser:function(state,obj){
+            state.user = obj
+            console.log(state.user)
+            //console.log(obj)
+        }
       
     },
     actions:{
@@ -158,16 +160,22 @@ export const store = new Vuex.Store({
                 console.log("PUT Detail error"+ error);
             });
         },
-        getuser:(context)=>{
-            //console.log("Inside Get User")
-            axios.get('/login/now/')
-            .then((response)=> {
-                //console.log("Getting User")
-                //console.log(response.data)     
+        GetUser:(context,obj)=>{
+            console.log("Inside Get User")
+
+            axios.get('http://localhost:3000/gettoken').then((res)=>{
+                axios.get('http://localhost:8000/api/hello/',{ headers: { Authorization:"Bearer "+  res.data.token} })
+                .then((response)=> {
+                    console.log(response.data)
+                    context.commit("GetUser",response.data[0])
+                })
+                .catch(function (error) {
+                   console.log("Get User Autherrize error"+ error);
+                }); 
+            }).catch(function(error){
+                console.log("GetToken error"+ error);
             })
-            .catch(function (error) {
-               // console.log("Get User error"+ error);
-            });
+           
         },
         getnoteinfo:(context,obj)=>{
             axios.get('/upload/note/'+ hash.dec(obj)+'/')
@@ -214,9 +222,9 @@ export const store = new Vuex.Store({
             });
         },
         chat:(context,obj)=>{
-            axios.post('/person/chat/'+obj.teamid, obj)
+            axios.post('/person/chat/'+ obj.teamid, obj)
             .then((response)=> {
-                console.log(response.data)
+                console.log("RESPONESE"+ response.data)
                 //context.commit("addmenulist",response.data)       
             })
             .catch(function (error) {

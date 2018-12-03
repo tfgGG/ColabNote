@@ -16,7 +16,7 @@ import Quill from 'quill';
 import axios from 'axios'
 import ShareDB from 'sharedb/lib/client';
 import richText from 'rich-text';
-const socket = new WebSocket('ws://localhost:3000');
+const socket = new WebSocket('ws://'+location.origin+':3000');
 const connection = new ShareDB.Connection(socket);
 ShareDB.types.register(richText.type);
 export default {
@@ -39,13 +39,13 @@ export default {
   },
   created: function(){ 
      this.save()
-     this.$store.dispatch("getuser")
+     //this.$store.dispatch("GetUser")
      console.log("MODE:"+this.mode)
+  
     
   },
   mounted: function(){
       
-      console.log(this.mode)
       this.editdoc = connection.get(this.id[0],this.id[1]);
       if(this.mode == 'view')
       {
@@ -60,7 +60,6 @@ export default {
           
           //代表server turn on again 或 使用者本來就空的
           if(this.editdoc.data.ops.length == 0){
-             this.quill.setText("Data Loading.....    ")
              var t = setTimeout(()=>{
                 console.log("printing IF")
                 var parsedata = JSON.parse(this.getnote().note)
@@ -97,7 +96,7 @@ export default {
      },
      save(note){
         this.saving = setInterval(() => {
- 
+           
             var n = JSON.stringify(this.quill.getContents())
             this.getnote().note = n 
             this.$store.dispatch('savenote',this.getnote())

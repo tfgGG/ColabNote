@@ -59,11 +59,15 @@ export default {
     },
     created: function() {
         
+
         const word = window.location.pathname.split('/');
         this.ids.push( word[2])
         this.ids.push( word[3])
         var urlParams = new URLSearchParams(window.location.search);
         this.mode = urlParams.getAll('p')  
+
+        
+    
     },
     methods: {
 

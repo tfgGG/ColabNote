@@ -7,7 +7,7 @@
             <div class="ui comments">
               <div class="comment" :key="item" v-for="item in commentlist">
                 <a class="avatar" href="#">
-                    <img class="avatar" src="http://localhost:8000/media/user1.jpg" alt="avatar">
+                    <img class="avatar" v-bind:src="item.img" alt="avatar">
                 </a>
                 <div class="content" href="#">
                       <a class="author">{{item.username}}</a>
@@ -36,7 +36,7 @@
 
 import ShareDB from 'sharedb/lib/client';
 import axios from 'axios'
-var socket = new WebSocket('ws://localhost:3000');
+var socket = new WebSocket('ws://'+location.origin+':3000');
 var connection = new ShareDB.Connection(socket);
 var cdoc;
 export default {
@@ -86,9 +86,10 @@ export default {
       const comment=[];
       const obj = {
         note: this.ids[0],
-        user: this.user.user,
+        user: this.user.id,
         message: this.comment,
-        username:this.username
+        username: this.user.username,
+        img: 'http://140.136.150.93/media/'+this.user.first_name
       }
       
       console.log("send out");
@@ -102,6 +103,7 @@ export default {
     },
     fetchdata: function(){
        this.$store.dispatch("setcomment",this.ids[0])
+       this.$store.dispatch("GetUser")
     }
   }
 };

@@ -7,7 +7,8 @@
                  <div class="ui blue icon button right floated" onclick="$('.ui.modal').modal('show');"><i class="columns icon"></i></div>
             </h3>
             <div class="sub header">{{noteinfo.intro}}</div>
-            <div class="sub header"><a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a></div>
+            <div class="sub header "><a class="ui gray label">{{noteinfo.field}}</a></div>
+           <!-- <div class="sub header"><a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a></div>-->
         </div>
 
       </div>

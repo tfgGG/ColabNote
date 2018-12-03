@@ -14,7 +14,7 @@
                 <button class="ui blue button"><i class="pencil alternate icon"></i>Register</button>
             </a>
 
-            <a class="right item" href=" ">Logout</a>
+            <a class="right item" href="http://localhost:3000/distroy/">Logout</a>
             <div class= "item">
                 <img class= "ui avatar image" src="">
                 <div class="right floated"><h5>Hi</h5></div>

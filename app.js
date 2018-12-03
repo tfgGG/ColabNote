@@ -9,15 +9,24 @@ var path = require('path')
 var Hashids = require('hashids')
 var axios = require('axios')
 var fs = require('fs');
+var session = require('express-session')
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
+
 //require("@babel/polyfill");
 //var S = require('./lib/utils')
 var ClientOAuth2 = require('client-oauth2')
  
 var githubAuth = new ClientOAuth2({
-  clientId: 'gJzg99w4Trm42aN6R9GZbG9cyCxChnSMOehQw5sn',
-  clientSecret: 'sDzhWOmUPiCRM4eHvkNWftRy4DQv1Pkt726xxK08rcAmAmQlyPPVqSVoQdZ3iiIf0KJ5Ie7vUfhpjcJJzvf4OXGe8stgsmVIwxu9pwWPWGnlNryxUYMNJGLvt6jyLwnb',
+  clientId: 'px4dL5MkF2hW6YASaBGugJG8fJYx4GHBl9U4BM0D',
+  clientSecret: '3ZrXCZdgWYYuU7YR9iNJalxH90vrFbxnPdQJfvywOxQKWy5ASMuTXPYtoIUix4j7lMvR3Zaw9zmmkvO9XWBwOVr8i4HNmHVVb3HsdWZigchWFg3fiQbMZRMBdR1ee8Oc',
   accessTokenUri: 'http://localhost:8000/o/token/',
-  authorizationUri: 'http://localhost:8000/o/authorize/',
+  authorizationUri: 'http://localhost:8000/o/authorize',
   redirectUri: 'http://localhost:3000/auth/github/callback',
   scopes: ['notifications', 'gist']
 })
@@ -45,76 +54,112 @@ wss.on('connection', function(ws, req) {
   backend.listen(stream);
 });
 
-
-app.get('/auth/github', function (req, res) {
-    var uri = githubAuth.code.getUri()
-    res.redirect(uri)
-})
+var localStorage = null
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
    
-app.get('/auth/github/callback', function (req, res) {
+  localStorage.setItem('myFirstKey', 'myFirstValue');
+  console.log(localStorage.getItem('myFirstKey'));
+
+app.get('/api/:id',function(req,res){
+
+    res.send("User" + req.params.id)
+})
+
+app.get("/auth/github/",function(req,res){
+    var uri = githubAuth.code.getUri()
+        console.log("/auth/github/")
+        res.redirect(uri)
+})
+
+   
+app.get('/auth/github/callback/', function (req, res) {
     console.log("CALLBACK")
+    console.log(req.session.islogin)
     githubAuth.code.getToken(req.originalUrl)
-      .then(function (user) {
+      .then(function(user) {
         console.log("USER")
         console.log(user) //=> { accessToken: '...', tokenType: 'bearer', ... }
-        axios.defaults.headers = {'Authorization' :"Bearer "+user.accessToken};
+       // axios.defaults.headers = {'Authorization' :"Bearer "+user.accessToken};
         // Refresh the current users access token.
-        user.refresh().then(function (updatedUser) {
-          console.log(updatedUser !== user) //=> true
-          console.log(updatedUser.accessToken)
-        })
-   
+        //user.refresh().then(function (updatedUser) {
+         // console.log(updatedUser !== user) //=> true
+          //console.log(updatedUser.accessToken)
+
         // Sign API requests on behalf of the current user.
         user.sign({
           method: 'get',
-          url: 'http://localhost:8000/person/profile/'
+          url: 'http://localhost:8000/upload/note/12',
         })
-        
-        console.log(axios.defaults)
-        /*axios.get('http://localhost:8000/person/profile/',{ headers: { Authorization: "Bearer " + user.accessToken }}).then(response => {
-            // If request is good...
-            console.log(response.data);
-          })
-          .catch((error) => {
-            console.log('error 3 ' + error);
-          });*/
-        // We should store the token into a database.
-        return res.send(user.accessToken)
-      })
+       //var r =  req.query.code  
+       axios.defaults.headers.common['Authorization'] = 'Baerer '+user.accessToken
+       console.log(user.accessToken)
+
+       localStorage.setItem('myFirstKey', user.accessToken);
+       console.log(localStorage.getItem('myFirstKey'));
+
+        res.redirect('http://locahost:8000/upload/index/')
+    })  
+
 })
 
+app.get('/gettoken',function(req,res,next){
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ 'token': localStorage.getItem('myFirstKey') }));
+})
 
-
-
-
-
-
-
-
-
-
+app.get('/destroy',function(req,res){
+    req.session.islogin = 0
+    console.log(req.session.islogin)
+    res.send("LOGOUT")
+})
 
 app.get('/', function (req, res) {
+
     res.send('Hello World!');
 });
   
 app.get('/note/:noteid/1/',function(req,res,next){
+
     var hashids = new Hashids("",6)
     var newhash1 = hashids.encode(req.params.noteid)
-    console.log(newhash1)
-    console.log(newhash2)
+    //console.log(newhash1)
+    //console.log(newhash2)
     var newhash2 = hashids.encode(req.params.noteid*100 + 1) 
     res.redirect('../../'+ newhash1+'/'+ newhash2)
 })
 
 
 app.get('/note/:noteid/:id',function(req,res,next){
+    /*if(req.session.islogin == 0 || req.session.islogin == null){
+        console.log("YES!!")
+        req.session.islogin = "/note/"+req.params.noteid+'/'+req.params.id
+        console.log(req.session.islogin)
+        var uri = githubAuth.code.getUri()
+        console.log("/auth/github/")
+        res.redirect(uri)
+    } */
+   // else{
+        console.log(req.session.islogin)
+        next();
+    //}
+    
+},function(req,res,next){
     createDoc(req.params.noteid,req.params.id)
     console.log(req.params.noteid +" "+req.params.id);
     res.writeHeader(200,{'Content-Type':'text/html'});
     res.write(editorhtml); // response board.html
-    res.end();
+    res.end()
 })
+
+/*
+app.get('/auth/github', function (req, res) {
+    var uri = githubAuth.code.getUri()
+    console.log("/auth/github/")
+    res.redirect(uri)
+})*/
 
 app.get('/message/:id',function(req,res,next){
     

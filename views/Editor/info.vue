@@ -69,10 +69,10 @@ export default {
     changepage(noteid,id){
         
         if(this.mode == 'frame'){
-        document.location.href = 'http://'+ document.location.hostname + '/note/'+ noteid + "/" + id+ "?p=frame"
+        document.location.href = 'http://'+ document.location.hostname+":"+location.port + '/note/'+ noteid + "/" + id+ "?p=frame"
         }
         else{
-        document.location.href = 'http://'+ document.location.hostname + '/note/'+ noteid + "/" + id
+        document.location.href = 'http://'+ document.location.hostname+":"+location.port + '/note/'+ noteid + "/" + id
         }
     },
     addNote(){

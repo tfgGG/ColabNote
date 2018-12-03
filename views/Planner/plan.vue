@@ -6,30 +6,11 @@
 		    <div v-for="(item,index) in list" 
                 :key="index" 
                 :class="{chat: true, friend: item.user != user , self: item.user == user}">
-                <p class="chat-message">{{item.message}}</p>	
+                <p class="chat-message">{{item.text}}</p>	
             </div>
 			<div class="chat friend">
 				<div class="user-photo"></div>
 				<p class="chat-message">What's up, Brother ..!!</p>	
-			</div>
-			<div class="chat friend">
-				<div class="user-photo"></div>
-				<p class="chat-message">What's up, Brother ..!!</p>	
-			</div>
-			<div class="chat self">
-				<div class="user-photo"></div>
-				<p class="chat-message">What's up ..!!</p>	
-			</div>
-			<div class="chat self">
-				<div class="user-photo"></div>
-				<p class="chat-message">A única área que eu acho, que vai exigir muita atenção nossa, e aí eu já aventei a hipótese de até criar um ministério. É na área de... Na área... Eu diria assim, como uma espécie de analogia com o que acontece na área agrícola.</p>	
-			</div>
-			<div class="chat friend">
-				<div class="user-photo"></div>
-				<p class="chat-message">No meu xinélo da humildade eu gostaria muito de ver o Neymar e o Ganso. Por que eu acho que.... 11 entre 10 brasileiros gostariam. Você veja, eu já vi, parei de ver. Voltei a ver, e acho que o Neymar e o Ganso têm essa capacidade de fazer a gente olhar.
-
-				Todos as descrições das pessoas são sobre a humanidade do atendimento, a pessoa pega no pulso, examina, olha com carinho. Então eu acho que vai ter outra coisa, que os médicos cubanos trouxeram pro brasil, um alto grau de humanidade.
-				</p>	
 			</div>
 		</div>
 		<div class="chat-form">
@@ -42,8 +23,10 @@
 </div>    
 </template>
 <script>
+var ClientOAuth2 = require('client-oauth2')
+import $ from 'jquery'
 import ShareDB from 'sharedb/lib/client';
-var socket = new WebSocket('ws://localhost:3000');
+var socket = new WebSocket('ws://'+location.origin+':3000');
 var connection = new ShareDB.Connection(socket);
 var mdoc;
 export default {
@@ -58,6 +41,31 @@ export default {
 	created:function(){
 		var array = window.location.pathname.split('/')
 		this.teamid = array[2]
+
+		/*
+		var githubAuth = new ClientOAuth2({
+			clientId: 'px4dL5MkF2hW6YASaBGugJG8fJYx4GHBl9U4BM0D',
+			clientSecret: '3ZrXCZdgWYYuU7YR9iNJalxH90vrFbxnPdQJfvywOxQKWy5ASMuTXPYtoIUix4j7lMvR3Zaw9zmmkvO9XWBwOVr8i4HNmHVVb3HsdWZigchWFg3fiQbMZRMBdR1ee8Oc',
+			accessTokenUri: 'http://localhost:8000/o/token/',
+			authorizationUri: 'http://localhost:8000/o/authorize',
+			redirectUri: 'http://localhost:3000/auth/github/callback',
+			scopes: ['notifications', 'gist']
+		})
+		var uri = githubAuth.code.getUri()
+        console.log("/auth/github/")
+        
+		 $.ajax({
+			url: uri,
+			type: 'GET',
+			contentType : 'text/plain',
+			error: function(xhr) {
+				console.log(xhr)
+			},
+			success: function(response) {
+				console.log(response)
+		}
+		});*/
+ 	  
 	},
     mounted:function(){
 
@@ -69,9 +77,10 @@ export default {
            if (err) throw err;
 
         mdoc.on('op',(op)=>{
-            console.log("Hi")
-            console.log(mdoc.data.message[0])
-            this.list.unshift(mdoc.data.message[0])
+            console.log("Get OP")
+            console.log("This is op message "+mdoc.data.message[0])
+			this.list.unshift(mdoc.data.message[0])
+			console.log(this.list)
             //store.commit("addcomment",cdoc.data.message[0])
          });
       });
@@ -79,10 +88,11 @@ export default {
     },
     methods:{
         send(){
+			var d = new Date()
             var obj = {
                 text:this.message,
 				userid:"37",
-				time: Date.now(),
+				time: d.getHours()+":"+d.getMinutes(),
 				teamid:this.teamid
             }
             this.message=''
