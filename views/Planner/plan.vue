@@ -3,21 +3,21 @@
     <div class="chat">
         <div class="chatbox">
 		<div class="chatlogs">
-		    <div v-for="(item,index) in list" 
-                :key="index" 
-                :class="{chat: true, friend: item.user != user , self: item.user == user}">
-                <p class="chat-message">{{item.text}}</p>	
-            </div>
 			<div class="chat friend">
 				<div class="user-photo"></div>
 				<p class="chat-message">What's up, Brother ..!!</p>	
 			</div>
+		    <div v-for="(item,index) in list" 
+                :key="index" 
+                :class="{chat: true, friend: user.id != item.userid , self: item.userid == user.id }">
+                <p class="chat-message">{{item.text}}</p>	
+            </div>			
 		</div>
 		<div class="chat-form">
 			<input type="text" v-model="message">
 			<button @click="send">Send</button>
 		</div>
-	</div>
+		</div>
 
     </div>
 </div>    
@@ -26,7 +26,7 @@
 var ClientOAuth2 = require('client-oauth2')
 import $ from 'jquery'
 import ShareDB from 'sharedb/lib/client';
-var socket = new WebSocket('ws://'+location.origin+':3000');
+var socket = new WebSocket('ws://'+location.hostname+":"+location.port);
 var connection = new ShareDB.Connection(socket);
 var mdoc;
 export default {
@@ -38,38 +38,20 @@ export default {
 			teamid:''
         } 
 	},
+	computed:{
+		user(){
+      		return this.$store.state.user
+    	},
+	},
 	created:function(){
 		var array = window.location.pathname.split('/')
 		this.teamid = array[2]
-
-		/*
-		var githubAuth = new ClientOAuth2({
-			clientId: 'px4dL5MkF2hW6YASaBGugJG8fJYx4GHBl9U4BM0D',
-			clientSecret: '3ZrXCZdgWYYuU7YR9iNJalxH90vrFbxnPdQJfvywOxQKWy5ASMuTXPYtoIUix4j7lMvR3Zaw9zmmkvO9XWBwOVr8i4HNmHVVb3HsdWZigchWFg3fiQbMZRMBdR1ee8Oc',
-			accessTokenUri: 'http://localhost:8000/o/token/',
-			authorizationUri: 'http://localhost:8000/o/authorize',
-			redirectUri: 'http://localhost:3000/auth/github/callback',
-			scopes: ['notifications', 'gist']
-		})
-		var uri = githubAuth.code.getUri()
-        console.log("/auth/github/")
-        
-		 $.ajax({
-			url: uri,
-			type: 'GET',
-			contentType : 'text/plain',
-			error: function(xhr) {
-				console.log(xhr)
-			},
-			success: function(response) {
-				console.log(response)
-		}
-		});*/
+		this.$store.dispatch("GetUser",document.cookie)
  	  
 	},
     mounted:function(){
 
-      mdoc = connection.get("message",'h');
+      mdoc = connection.get("message",this.teamid);
       //console.log(mdoc.data.message)
       var scolist = this.list
       //const store = this.$store;
@@ -79,7 +61,7 @@ export default {
         mdoc.on('op',(op)=>{
             console.log("Get OP")
             console.log("This is op message "+mdoc.data.message[0])
-			this.list.unshift(mdoc.data.message[0])
+			this.list.push(mdoc.data.message[0])
 			console.log(this.list)
             //store.commit("addcomment",cdoc.data.message[0])
          });
@@ -91,7 +73,7 @@ export default {
 			var d = new Date()
             var obj = {
                 text:this.message,
-				userid:"37",
+				userid:this.user.id,
 				time: d.getHours()+":"+d.getMinutes(),
 				teamid:this.teamid
             }
@@ -134,8 +116,10 @@ export default {
 .chat {
 	display: flex;
 	flex-flow: row wrap;
+	width: 100%;
 	align-items: flex-start;
 	margin-bottom: 10px;
+	overflow: hidden;
 }
 
 

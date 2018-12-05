@@ -23,11 +23,11 @@ app.use(session({
 var ClientOAuth2 = require('client-oauth2')
  
 var githubAuth = new ClientOAuth2({
-  clientId: 'px4dL5MkF2hW6YASaBGugJG8fJYx4GHBl9U4BM0D',
-  clientSecret: '3ZrXCZdgWYYuU7YR9iNJalxH90vrFbxnPdQJfvywOxQKWy5ASMuTXPYtoIUix4j7lMvR3Zaw9zmmkvO9XWBwOVr8i4HNmHVVb3HsdWZigchWFg3fiQbMZRMBdR1ee8Oc',
-  accessTokenUri: 'http://localhost:8000/o/token/',
-  authorizationUri: 'http://localhost:8000/o/authorize',
-  redirectUri: 'http://localhost:3000/auth/github/callback',
+  clientId: 'pO4KY0nZD8kiwkWf9ygYPD1O8bXmzYBu1gxlLV5F',
+  clientSecret: 'bp8Ofj8BMLuKmXASCiySFDRFAkOwuIK5fhx64C8a2O9Ip5OSi7ZIFkRquX4Vd9XMBZbtCqMtQyv7OYNYKm7fNjmi1IE3n7Jgk7OA9G9mKiMhRedE5NXRglvsFhGOATJZ',
+  accessTokenUri: 'http://140.136.150.93/o/token/',
+  authorizationUri: 'http://140.136.150.93/o/authorize/',
+  redirectUri: 'http://140.136.150.93:3000/auth/github/callback',
   scopes: ['notifications', 'gist']
 })
 var editorhtml = fs.readFileSync("./views/Editor/main.html")
@@ -45,7 +45,7 @@ app.set('port',process.env.PORT||3000);
 app.use(express.static(__dirname +'/public'))
 app.use(cors());
 
-var server = app.listen(app.get('port'));
+var server = app.listen(app.get('port'),app.get('ip'));
 //var io = require('socket.io')(server);
 
 var wss = new WebSocket.Server({server: server});
@@ -54,17 +54,9 @@ wss.on('connection', function(ws, req) {
   backend.listen(stream);
 });
 
-var localStorage = null
-if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./scratch');
-  }
-   
-  localStorage.setItem('myFirstKey', 'myFirstValue');
-  console.log(localStorage.getItem('myFirstKey'));
 
 app.get('/api/:id',function(req,res){
-
+    res.cookie('user', req.params.id);
     res.send("User" + req.params.id)
 })
 
@@ -75,13 +67,13 @@ app.get("/auth/github/",function(req,res){
 })
 
    
-app.get('/auth/github/callback/', function (req, res) {
+app.get('/auth/github/callback', function (req, res) {
     console.log("CALLBACK")
-    console.log(req.session.islogin)
+    console.log(req.originalUrl)
     githubAuth.code.getToken(req.originalUrl)
       .then(function(user) {
         console.log("USER")
-        console.log(user) //=> { accessToken: '...', tokenType: 'bearer', ... }
+        //console.log(user) //=> { accessToken: '...', tokenType: 'bearer', ... }
        // axios.defaults.headers = {'Authorization' :"Bearer "+user.accessToken};
         // Refresh the current users access token.
         //user.refresh().then(function (updatedUser) {
@@ -97,27 +89,23 @@ app.get('/auth/github/callback/', function (req, res) {
        axios.defaults.headers.common['Authorization'] = 'Baerer '+user.accessToken
        console.log(user.accessToken)
 
-       localStorage.setItem('myFirstKey', user.accessToken);
-       console.log(localStorage.getItem('myFirstKey'));
-
-        res.redirect('http://locahost:8000/upload/index/')
-    })  
+       //localStorage.setItem('myFirstKey', user.accessToken);
+       //console.log(localStorage.getItem('myFirstKey'));
+      
+       return user.accessToken
+      
+       
+    }).then((tok)=>{
+        res.cookie('accesstoken', tok,{domain:'140.136.150.93', maxAge: 1000000 });
+        res.redirect('http://140.136.150.93/upload/index')
+    })
+    
 
 })
 
-app.get('/gettoken',function(req,res,next){
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ 'token': localStorage.getItem('myFirstKey') }));
-})
 
-app.get('/destroy',function(req,res){
-    req.session.islogin = 0
-    console.log(req.session.islogin)
-    res.send("LOGOUT")
-})
 
 app.get('/', function (req, res) {
-
     res.send('Hello World!');
 });
   
@@ -142,6 +130,7 @@ app.get('/note/:noteid/:id',function(req,res,next){
         res.redirect(uri)
     } */
    // else{
+         res.cookie('some_cross_domain_cookie', 'http://mysubdomain.example.com',{domain:'140.136.150.93:3000'});
         console.log(req.session.islogin)
         next();
     //}
@@ -204,7 +193,7 @@ function createDoc(noteid,id)
 function createMessageDoc(teamid){
 
     var connection = backend.connect();
-    var mdoc = connection.get('message', "h");
+    var mdoc = connection.get('message', teamid);
     console.log(teamid)
 
     mdoc.fetch(function(err) {

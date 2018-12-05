@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div clas="ui segment" style=" display:block;height:100%;">
+    <div clas="ui segment" style=" display:inline-block; height:100%;">
       <h3 class="ui block center aligned header" style="color:white; background-color: #3C8BDA;">Comment Area</h3>
       <div class="ui grid centered" style="overflow-y:scroll; height:85%;">
           <div class="sixteen wide column">
@@ -36,7 +36,7 @@
 
 import ShareDB from 'sharedb/lib/client';
 import axios from 'axios'
-var socket = new WebSocket('ws://'+location.origin+':3000');
+var socket = new WebSocket('ws://'+location.hostname+":"+location.port);
 var connection = new ShareDB.Connection(socket);
 var cdoc;
 export default {
@@ -56,9 +56,6 @@ export default {
     user(){
       return this.$store.state.user
     },
-    username(){
-      return this.$store.state.username 
-    }
   },
   created(){
     this.fetchdata()
@@ -103,7 +100,8 @@ export default {
     },
     fetchdata: function(){
        this.$store.dispatch("setcomment",this.ids[0])
-       this.$store.dispatch("GetUser")
+       this.$store.dispatch("GetUser",document.cookie)
+       
     }
   }
 };

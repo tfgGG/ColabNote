@@ -16,7 +16,7 @@ import Quill from 'quill';
 import axios from 'axios'
 import ShareDB from 'sharedb/lib/client';
 import richText from 'rich-text';
-const socket = new WebSocket('ws://'+location.origin+':3000');
+const socket = new WebSocket('ws://'+location.hostname+":"+location.port);
 const connection = new ShareDB.Connection(socket);
 ShareDB.types.register(richText.type);
 export default {

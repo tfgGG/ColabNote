@@ -18,7 +18,7 @@
           
               <div class="field">
                 <label>Group:</label>
-                <select class="ui dropdown group" name = "group" v-model="selected">
+                <select class="group" name = "group" v-model="selected">
                       <option v-for="item in group" :key="item.idgroup" class="item" v-bind:value="item.idgroup">{{item.name}}</option>
                 </select>
                 <button @click="addgroup()">Add to group</button>
@@ -51,13 +51,16 @@ export default {
     },
     plan(){
        return this.$store.state.plan
+    },
+    user(){
+      return this.$store.state.user
     }
   },
   created:function(){
 
 
     this.$store.dispatch("getnoteinfo",this.ids[0])
-    this.$store.dispatch("getgroup")
+    //this.$store.dispatch("getgroup")
    
     
   },
@@ -68,13 +71,12 @@ export default {
          console.log("Inside detect")
          console.log($( ".group" ).val())
       })
-    
   },
   methods:{
 
     addgroup(){
       var team = this.selected
-      this.$store.dispatch("groupnote",{'permission':team, 'noteid': this.ids[0]})
+      this.$store.dispatch("groupnote",{'note': this.ids[0],'group': $( ".group" ).val()})
     }
 
   }

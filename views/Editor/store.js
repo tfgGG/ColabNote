@@ -117,6 +117,7 @@ export const store = new Vuex.Store({
             });
         },
         addcomment: function(context,obj){
+
             obj.note = hash.dec(obj.note)
             console.log(obj)
             axios.post('/upload/addComment/', obj)
@@ -162,19 +163,24 @@ export const store = new Vuex.Store({
         },
         GetUser:(context,obj)=>{
             console.log("Inside Get User")
-
-            axios.get('http://localhost:3000/gettoken').then((res)=>{
-                axios.get('http://localhost:8000/api/hello/',{ headers: { Authorization:"Bearer "+  res.data.token} })
+            var t = obj.split('; ').find(function(element) {
+                return element.includes("accesstoken") == true;
+            });
+            console.log(t)
+            //axios.get('http://'+ location.hostname+":"+location.port+'/gettoken').then((res)=>{
+                axios.get('http://'+location.hostname+ '/api/hello/',{ headers: { Authorization:"Bearer "+  t.split("=").pop()} })
                 .then((response)=> {
                     console.log(response.data)
                     context.commit("GetUser",response.data[0])
+                    context.dispatch('getgroup',response.data[0].id)
+                
                 })
                 .catch(function (error) {
                    console.log("Get User Autherrize error"+ error);
                 }); 
-            }).catch(function(error){
-                console.log("GetToken error"+ error);
-            })
+            //}).catch(function(error){
+            //    console.log("GetToken error"+ error);
+            //})
            
         },
         getnoteinfo:(context,obj)=>{
@@ -200,7 +206,8 @@ export const store = new Vuex.Store({
             });
         },
         getgroup:(context,obj)=>{
-            axios.get('/person/Group/'+context.state.user.user+'/')
+            console.log(context.state.user)
+            axios.get('/person/Group/'+ context.state.user.id+'/')
             .then((response)=> {
                 console.log("Getting Group")
                 console.log(response.data)  
@@ -232,7 +239,8 @@ export const store = new Vuex.Store({
             });
         },
         groupnote:(context,obj)=>{
-            axios.patch("/upload/groupnote/"+hash.dec(obj.noteid),{'permission':obj.permission})
+            obj.note = hash.dec(obj.note)
+            axios.post("/upload/POST/groupnote/",obj)
             .then((response)=> {
                 console.log(response.data)
                 //context.commit("addmenulist",response.data)       
