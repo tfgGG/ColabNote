@@ -2,9 +2,11 @@
     <div>
         <div v-if="mode != 'frame'">
             <heads></heads>
+            <!--<comment v-bind:ids="ids" id="mySidenav" class='sidenav' ></comment>-->
         </div>
         <div id="main"  v-if="mode!= 'frame'">
-            <div class='ui grid container'>
+            <button  class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>
+            <div class='ui grid container'> 
                     <div class="five wide column">
                         <info v-bind:ids="ids"  v-bind:mode="mode"></info>
                     </div>
@@ -15,7 +17,7 @@
                         </div>
                         
                     </div>
-                    <button  class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>
+                    
             </div>
             
         </div>    
@@ -28,10 +30,10 @@
                         <div class="sixteen wide column"><editor v-bind:ids="ids"  v-bind:mode="mode"></editor></div>       
                 </div> 
         </div>
-        <div v-if="mode != 'frame'"  class="sidenav">
-            <comment v-bind:ids="ids" id="mySidenav" ></comment>
+
+        <div v-if="mode != 'frame'">
+            <comment v-bind:ids="ids" id="mySidenav" class='sidenav' ></comment>
         </div>
-            
     </div>
 </template>
 
@@ -77,7 +79,7 @@ export default {
             if(this.toogle=="0")
             {
                 document.getElementById("mySidenav").style.width = "350px"
-               // document.getElementById("main").style.marginRight = "350px"
+                document.getElementById("main").style.marginLeft = "350px"
                 this.toogle = "1"
             }else{
                 this.closeNav()
@@ -87,7 +89,7 @@ export default {
         },
         closeNav: function(){
             document.getElementById("mySidenav").style.width = "0"
-            document.getElementById("main").style.marginRight= "0"
+            document.getElementById("main").style.marginLeft= "0"
             
         },
 
@@ -113,6 +115,7 @@ body{
     height: 100%;
     width: 0;
     display:block;
+    position: fixed;
     z-index: 1;
     top: 0;
     background-color:white;

@@ -75,6 +75,10 @@ export default {
   methods:{
 
     addgroup(){
+      if($( ".group" ).val() == '')
+      {
+        return;
+      }
       var team = this.selected
       this.$store.dispatch("groupnote",{'note': this.ids[0],'group': $( ".group" ).val()})
     }

@@ -1,24 +1,29 @@
 <template>
 <div>
     <div class="chat">
-        <div class="chatbox">
-		<div class="chatlogs">
-			<div class="chat friend">
-				<div class="user-photo"></div>
-				<p class="chat-message">What's up, Brother ..!!</p>	
+			<div class="chatlogs">
+				<div class="chat friend">
+					<p class="chat-message">Start to Chat</p>	
+				</div>
+				<div style="width:100%;">
+					<div v-for="(item,index) in list" 
+						:key="index" 
+						:class="{chat: true, friend: user.id != item.userid , self: item.userid == user.id }"  style="margin-top:5px;">
+							<img class="user-photo" style="" v-bind:src='item.img'>
+							<span class="" style="font:16px; "><b>{{item.username}}</b></span>
+							<span class="" style="font:16px; color:#5e6570;">{{item.time}}</span>
+							<p class="chat-message">{{item.text}}</p>	
+					</div>
+				</div>			
 			</div>
-		    <div v-for="(item,index) in list" 
-                :key="index" 
-                :class="{chat: true, friend: user.id != item.userid , self: item.userid == user.id }">
-                <p class="chat-message">{{item.text}}</p>	
-            </div>			
-		</div>
-		<div class="chat-form">
-			<input type="text" v-model="message">
-			<button @click="send">Send</button>
-		</div>
-		</div>
-
+			<div class="chat-form">
+	
+					<div class="">
+						<input type="text" v-model="message" width="50%">
+						<button @click="send" >Send</button>
+					</div>
+	
+			</div>
     </div>
 </div>    
 </template>
@@ -70,12 +75,17 @@ export default {
     },
     methods:{
         send(){
+			if (this.message.trim() =='') {
+				return ;
+			}
 			var d = new Date()
             var obj = {
                 text:this.message,
 				userid:this.user.id,
 				time: d.getHours()+":"+d.getMinutes(),
-				teamid:this.teamid
+				teamid:this.teamid,
+				username:this.user.username,
+				img:"http://140.136.150.93/media/" + this.user.first_name
             }
             this.message=''
 			this.$store.dispatch("chat",obj)
@@ -112,7 +122,7 @@ export default {
 	border-radius: 5px;
 	background: rgba(0,0,0,.1);
 }
-
+/*
 .chat {
 	display: flex;
 	flex-flow: row wrap;
@@ -120,23 +130,26 @@ export default {
 	align-items: flex-start;
 	margin-bottom: 10px;
 	overflow: hidden;
-}
+}*/
 
 
 .chat .user-photo {
-	width: 60px;
-	height: 60px;
+	width: 45px;
+	height: 45px;
 	background: #ccc;
 	border-radius: 50%;
 }
 
+
 .chat .chat-message {
-	width: 80%;
-	padding: 15px;
-	margin: 5px 10px 0;
-	border-radius: 10px;
+	width: 50%;
+	padding: 8px;
+	height: auto;
+	margin: 10px 10px 0;
+	border-radius: 5px;
 	color: #fff;
-	font-size: 20px;
+	font-weight: bold;
+	font-size: 18px;
 }
 
 .friend .chat-message {
@@ -145,26 +158,26 @@ export default {
 
 .self .chat-message {
 	background: #1ddced;
+	float: right;
 	order: -1;
 }
 
+.self .user-photo{
+	display: none;
+}
+
+.self span{
+	display: none;
+}
+
 .chat-form {
-	margin-top: 20px;
+	margin-top: 15px;
+	width: 100%;
+	position: fixed;
 	display: flex;
 	align-items: flex-start;
 }
 
-.chat-form textarea {
-	background: #fbfbfb;
-	width: 75%;
-	height: 50px;
-	border: 2px solid #eee;
-	border-radius: 3px;
-	resize: none;
-	padding: 10px;
-	font-size: 18px;
-	color: #333;
-}
 
 .chat-form textarea:focus {
 	background: #fff;

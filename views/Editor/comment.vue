@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div clas="ui segment" style=" display:inline-block; height:100%;">
+    <div clas="ui segment" style=" display:block;height:100%;">
       <h3 class="ui block center aligned header" style="color:white; background-color: #3C8BDA;">Comment Area</h3>
       <div class="ui grid centered" style="overflow-y:scroll; height:85%;">
           <div class="sixteen wide column">

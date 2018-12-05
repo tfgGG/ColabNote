@@ -1,42 +1,44 @@
 <template>
 <div>
-      <div class="ui secondary vertical menu">
-      <div class="item">
-        <input class="newnote ui input"
-              autofocus autocomplete="off"
-              placeholder="Enter New Note title"
-              v-model="newtitle">
-        <button type="button" @click="addNote" class="ui fluid button" >New</button>
-      </div>
-       
       <!--<section class="main" v-show="menulist.length" v-cloak>-->
-      <div class="ui divided list">
+      <div class="ui vertical menu">
+        <div class="item">
+          <input class="newnote ui input"
+                autofocus autocomplete="off"
+                placeholder="Enter New Note title"
+                v-model="newtitle">
+          <button type="button" @click="addNote" class="ui fluid button" >New</button>
+        </div>
         <div v-for="(item,index) in menulist"
             class="item"
             :key="item.idnote_list"
-            :class="{editing: item == editeditem }">
-            
-            <div class="view content" :class="{currents: item.idnote_list == ids[1] , not:item.idnote_list != ids[1]}">
+            :class="{editing: item == editeditem, currents: item.idnote_list == ids[1] , not:item.idnote_list != ids[1]}">
+
+            <div class="view content" :class="{}">
               <label v-on:dblclick="editNote(item)" > 
                 {{index + 1}}. {{ item.list_text }} 
               </label>
+                <button class="mini ui basic icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
+                  <i class="angle right icon"></i>
+                </button> 
               <!--<button class="destroy" @click="removeNote(item)"></button>-->
             </div>
+            <div class="edit content">
+              <input type="text"
+                style="width:90%;"
+                v-model="item.list_text"
+                v-todo-focus="item == editeditem"
+                @blur="doneEdit(item)"
+                @keyup.enter="doneEdit(item)"
+                @keyup.esc="cancelEdit(item)">
+            </div>
 
-            <input class="edit" type="text"
-              v-model="item.list_text"
-              v-todo-focus="item == editeditem"
-              @blur="doneEdit(item)"
-              @keyup.enter="doneEdit(item)"
-              @keyup.esc="cancelEdit(item)">
-              <button class="ui mini icon button" v-on:click="changepage( item.noteid,item.idnote_list)">
-                  <i class="angle right icon"></i>
-              </button> 
+
         </div>
       </div>
       <!--</section>-->
       <!--{{menulist}}-->
-      </div>
+     
 </div>
 </template>
 
@@ -134,10 +136,13 @@ li{
   list-style-type: none;
 }
 .currents{
-    border-right: 3px solid #787C7D;
+
     color: black;
     font-weight: bolder;
     font-size: 18px;
+}
+.currents .view{
+    border-right: 3px solid #787C7D;
 }
 .not{
   color: #787F80;
