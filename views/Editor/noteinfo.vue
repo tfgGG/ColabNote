@@ -1,27 +1,31 @@
 <template>
 <div>
-      <div class="ui basic segment">
-        <div class="ui left floated header">
-            <h3 class="ui header">
-                {{noteinfo.title}}
-                 <div class="ui blue icon button right floated" onclick="$('.ui.modal').modal('show');"><i class="columns icon"></i></div>
-            </h3>
-            <div class="sub header">{{noteinfo.intro}}</div>
-            <div class="sub header "><a class="ui gray label">{{noteinfo.field}}</a></div>
-           <!-- <div class="sub header"><a  :key="f" v-for="f in field" class="ui gray label">#{{f.text}}</a></div>-->
-        </div>
-
+      <div class="title">
+        <h2 class="ui header">
+          <div class="content" style="width:100%"> 
+              <div style="margin:10px; ">
+                 {{noteinfo.title}}
+                 <a class="ui gray label"> {{noteinfo.field}}</a>
+                 <button class="ui icon button right floated" onclick="$('.ui.modal').modal('show');"><i class="columns icon"></i></button>
+              </div>
+              <div class="sub header" style="margin:10px; ">{{noteinfo.intro}}</div>
+          </div>
+        </h2>
       </div>
+
       <div class="ui mini modal">
-        <div class="ui blue header">Add to Planner</div>
+        <div class="ui blue header">Add to Group</div>
         <div class="content">
           
               <div class="field">
                 <label>Group:</label>
-                <select class="group" name = "group" v-model="selected">
+                <select class="group ui dropdown" name = "group" v-model="selected">
                       <option v-for="item in group" :key="item.idgroup" class="item" v-bind:value="item.idgroup">{{item.name}}</option>
                 </select>
-                <button @click="addgroup()">Add to group</button>
+                <button class="timy ui basic blue button" @click="addgroup()">Add </button>
+              </div>
+              <div :key="a"  class="ui message" :class="{ negative: groupmessage.status == false, positive: groupmessage.status == true, none: groupmessage=='default'} " >
+                 {{groupmessage.message}}
               </div>
          
         </div>
@@ -49,15 +53,14 @@ export default {
     group(){
       return this.$store.state.group
     },
-    plan(){
-       return this.$store.state.plan
-    },
     user(){
       return this.$store.state.user
-    }
+    },
+    groupmessage(){
+      return this.$store.state.groupmessage
+     }
   },
   created:function(){
-
 
     this.$store.dispatch("getnoteinfo",this.ids[0])
     //this.$store.dispatch("getgroup")
@@ -92,6 +95,15 @@ export default {
 /* 樣式也可以包進來 ._. */
 .original-white {
   color: #fff;
+}
+
+.none{
+  display: none;
+}
+
+.title{
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+    border-left: 5px solid #326fd1;
 }
 [v-cloak] { display: none; }
 

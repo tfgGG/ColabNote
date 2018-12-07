@@ -7,7 +7,8 @@
         <div id="main"  v-if="mode!= 'frame'">
             <button  class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>
             <div class='ui grid container'> 
-                    <div class="five wide column">
+                
+                    <div class="five wide column" id="info">
                         <info v-bind:ids="ids"  v-bind:mode="mode"></info>
                     </div>
                     <div class="eleven wide column">                    
@@ -15,11 +16,10 @@
                             <div  class="sixteen wide column"><noteinfo v-bind:ids="ids" v-bind:mode="mode"></noteinfo></div>
                             <div class="sixteen wide column"><editor v-bind:ids="ids"  v-bind:mode="mode"></editor></div>
                         </div>
-                        
                     </div>
                     
             </div>
-            
+            <!--<button  class="ui icon basic button" @click="openNav"><i class="wechat icon"></i></button>-->
         </div>    
 
         <div v-if="mode=='frame'" class='ui grid'>                 
@@ -130,6 +130,7 @@ body{
 }
 @media screen and (max-height: 450px) {
   .sidenav a {font-size: 18px;}
+  #info{display: none;}
 }
 
 </style>

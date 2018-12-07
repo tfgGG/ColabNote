@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import hash from "../../lib/hash"
 import {cat } from "../../lib/cat"
-import { finished } from 'stream';
 //import { state } from 'fs';
 //axios.defaults.baseURL = "http://localhost:8000/" 
 axios.defaults.baseURL = "http://140.136.150.93/"
@@ -25,7 +24,8 @@ export const store = new Vuex.Store({
         cat:cat,
         group:[],
         plan:[],
-        login: false
+        login: false,
+        groupmessage:'default'
         //detail: db.getdetail()
     },
     getters: {
@@ -102,6 +102,9 @@ export const store = new Vuex.Store({
             state.user = obj
             console.log(state.user)
             //console.log(obj)
+        },
+        groupnote:function(state,obj){
+            state.groupmessage = obj
         }
       
     },
@@ -240,10 +243,21 @@ export const store = new Vuex.Store({
         },
         groupnote:(context,obj)=>{
             obj.note = hash.dec(obj.note)
+            var index = context.rootState.group.find((el)=> el.idgroup == parseInt(obj.group)).name
             axios.post("/upload/POST/groupnote/",obj)
             .then((response)=> {
                 console.log(response.data)
-                //context.commit("addmenulist",response.data)       
+                console.log(context.state.group)
+                if(response.data =='No'){
+                    console.log("Inside No")
+                    console.log(parseInt(obj.group))
+                    context.commit("groupnote",{status:false,message:'This note has been added to '+ index+' already'})       
+                }else{
+                    console.log(parseInt(obj.group))
+                    context.commit("groupnote",{status:true, message:"Add to"+ index  +"sucessfully"})  
+                }
+
+               
             })
             .catch(function (error) {
                 console.log("Put GroupNote Permission error"+ error);

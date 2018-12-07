@@ -1,30 +1,33 @@
 <template>
 <div>
-    <div class="chat">
-			<div class="chatlogs">
-				<div class="chat friend">
-					<p class="chat-message">Start to Chat</p>	
-				</div>
-				<div style="width:100%;">
+    <div class="ui grid" style="height:95%; overflow-y:scroll;">
+			<div class="sixteen wide column">
+				<div class="ui comments" style="width:100%;">
 					<div v-for="(item,index) in list" 
 						:key="index" 
-						:class="{chat: true, friend: user.id != item.userid , self: item.userid == user.id }"  style="margin-top:5px;">
-							<img class="user-photo" style="" v-bind:src='item.img'>
-							<span class="" style="font:16px; "><b>{{item.username}}</b></span>
-							<span class="" style="font:16px; color:#5e6570;">{{item.time}}</span>
-							<p class="chat-message">{{item.text}}</p>	
-					</div>
-				</div>			
-			</div>
-			<div class="chat-form">
-	
-					<div class="">
-						<input type="text" v-model="message" width="50%">
-						<button @click="send" >Send</button>
-					</div>
-	
-			</div>
+						class="comment"
+						:class="{ friend: user.id != item.userid , self: item.userid == user.id }">
+						<div class="content">
+							<a class="avatar" id='user-photo'>
+								<img  v-bind:src='item.img'>
+							</a>
+							<a class="author" id="username">{{item.username}}</a>
+							<div class="metadata" id='time'>
+								<span class="data">{{item.time}}</span>
+							</div>
+							<div class="text" id='dialog'>{{item.text}}</div>
+						</div>
+					</div>	
+					<br>
+				</div>		
+			</div>		
     </div>
+	<div class="ui bottom attached ">
+		<div class="ui block segment">
+					<input type="text" v-model="message" width="50%">
+					<button @click="send" >Send</button>
+		</div>
+	</div>
 </div>    
 </template>
 <script>
@@ -96,111 +99,39 @@ export default {
 }
 </script>
 <style>
-.chatbox {
-	width: 600px;
-	min-width: 390px;
-	height: 600px;
-	background: #fff;
-	padding: 25px;
-	margin: 20px auto;
-	box-shadow: 0 3px #ccc;
-}
-
-.chatlogs {
-	padding: 10px;
-	width: 100%;
-	height: 450px;
-	overflow-x: hidden;
-	overflow-y: scroll;
-}
-
-.chatlogs::-webkit-scrollbar {
-	width: 10px;
-}
-
-.chatlogs::-webkit-scrollbar-thumb {
-	border-radius: 5px;
-	background: rgba(0,0,0,.1);
-}
-/*
-.chat {
-	display: flex;
-	flex-flow: row wrap;
-	width: 100%;
-	align-items: flex-start;
-	margin-bottom: 10px;
-	overflow: hidden;
-}*/
 
 
-.chat .user-photo {
-	width: 45px;
-	height: 45px;
-	background: #ccc;
-	border-radius: 50%;
-}
-
-
-.chat .chat-message {
-	width: 50%;
-	padding: 8px;
-	height: auto;
-	margin: 10px 10px 0;
+#dialog {
+	height: 100%;
 	border-radius: 5px;
 	color: #fff;
 	font-weight: bold;
-	font-size: 18px;
+	font-size: 16px;
 }
 
-.friend .chat-message {
+.friend .text {
 	background: #1adda4;
+	width: 60%;
+}
+.self .text {
+	background:#1ddced;
 }
 
-.self .chat-message {
-	background: #1ddced;
-	float: right;
-	order: -1;
+.self .content {
+	margin-left: 50%;
 }
 
-.self .user-photo{
+.self #user-photo{
 	display: none;
 }
 
-.self span{
+.self #username{
 	display: none;
 }
-
-.chat-form {
-	margin-top: 15px;
-	width: 100%;
-	position: fixed;
-	display: flex;
-	align-items: flex-start;
+.self #time{
+	margin-left: 80%;
+	/*display: none;*/
 }
 
-
-.chat-form textarea:focus {
-	background: #fff;
-}
-
-.chat-form button {
-	background: #1ddced;
-	padding: 5px 15px;
-	font-size: 30px;
-	color: #fff;
-	border: none;
-	margin: 0 10px;
-	border-radius: 3px;
-	box-shadow: 0 3px 0 #0eb2c1;
-	cursor: pointer;
-
-	-webkit-transaction: background .2s ease;
-	-moz-transaction: backgroud .2s ease;
-	-o-transaction: backgroud .2s ease;
-}
-
-.chat-form button:hover {
-	background: #13c8d9;
-}
 
 </style>

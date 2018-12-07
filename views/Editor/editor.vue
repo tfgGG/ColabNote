@@ -3,6 +3,7 @@
 
   <div class="ui basic segment">
     <!--<h4>{{subtitle}}</h4>-->
+    <h4>{{loading}}</h4>
     <div id="editor" :class="{ view: this.mode == 'view'}">
       
     </div>
@@ -29,7 +30,8 @@ export default {
       quill: null,
       editdoc:null,
       subtitle:"THIS IS A TEST",
-      mode: this.mode[0]
+      mode: this.mode[0],
+      loading:''
     };
   },
    computed:{
@@ -60,10 +62,13 @@ export default {
           
           //代表server turn on again 或 使用者本來就空的
           if(this.editdoc.data.ops.length == 0){
+             this.loading ="Data Loading...."
              var t = setTimeout(()=>{
                 console.log("printing IF")
                 var parsedata = JSON.parse(this.getnote().note)
                 this.quill.setContents(parsedata.ops)
+                this.editdoc.data = parsedata.ops
+                this.loading=''
                 clearTimeout(t)
              },2500)
           }

@@ -1,9 +1,9 @@
 <template>
     <div>
     
-
-            <plan></plan>
-            
+        <div id="plan">
+            <plan ></plan>
+        </div>
     </div>
 </template>
 
@@ -25,16 +25,23 @@ export default {
     },
     created:function(){
 
+        
+        
         //var LocalStorage = require('node-localstorage').LocalStorage;
         //var url = "http://"+document.location.origin+":3000/gettoken"
         //axios.get("/api/hello/").then((response)=>{console.log(response.data)})
+    
+    },
+    mounted:function(){
         
-
     }
 
 }
 </script>
 
-<style>
+<style scoped>
+div{
+    height:100%;
+}
 
 </style>
