@@ -1,9 +1,9 @@
 <template>
 <div>
     <div class="ui menu">
-            <div class="item">
-              <img src="">
-            </div>
+
+             <img src="http://140.136.150.93/media/logo.png" width="100px" height="65px">
+        
             <a class="item" href="http://140.136.150.93/person/index/">MyPage</a>
             <a class="item" href = "http://140.136.150.93/upload/index/ ">Notes</a> 
             <a class="item" href = "https://140.136.150.93:3232/ ">WebCam</a> 

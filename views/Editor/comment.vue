@@ -12,7 +12,7 @@
                 <div class="content" href="#">
                       <a class="author">{{item.username}}</a>
                       <div class="metadata">
-                        <div class="date">2 days ago</div>
+                       
                       </div>
                       <div class="text">
                           {{item.message}}

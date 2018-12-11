@@ -29,9 +29,9 @@ export default {
       saving:null,
       quill: null,
       editdoc:null,
-      subtitle:"THIS IS A TEST",
       mode: this.mode[0],
-      loading:''
+      loading:'',
+      editstatus:0
     };
   },
    computed:{
@@ -54,32 +54,49 @@ export default {
         this.quill = new Quill('#editor',{readOnly: true,theme: 'bubble'})
 
       }else{
-        this.quill = new Quill('#editor', { modules: { toolbar: ['image','bold','color','font','header'] },theme: 'snow'});
+        this.quill = new Quill('#editor', { modules: { toolbar: ['image','bold','italic',{ 'color': [] },{ 'header': '3' },{ size: [ 'small', false, 'large', 'huge' ]},{ 'list': 'ordered'}, { 'list': 'bullet' },'indent','font'] },theme: 'snow'});
       }
       this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
           
           //代表server turn on again 或 使用者本來就空的
-          if(this.editdoc.data.ops.length == 0){
+          if(this.editdoc.data.ops[0].insert == ' '){
              this.loading ="Data Loading...."
              var t = setTimeout(()=>{
                 console.log("printing IF")
-                var parsedata = JSON.parse(this.getnote().note)
-                this.quill.setContents(parsedata.ops)
-                this.editdoc.data = parsedata.ops
-                this.loading=''
+                this.editstatus = 1
+                
+
+                if(this.getnote().note !='' && this.getnote().note != null)
+                {
+                    console.log(this.getnote().note)
+                    var parsedata = JSON.parse(this.getnote().note)
+                //this.quill.setContents(parsedata.ops)
+                  console.log(parsedata.ops)
+                  this.editdoc.data = parsedata.ops
+                  this.quill.setContents(this.editdoc.data);
+                  console.log(this.editdoc.data)
+                   
+                }
+                //this.editdoc.data.shift()
+                 this.loading=''
                 clearTimeout(t)
-             },2500)
+             },1500)
           }
           else{
             console.log("printing ELSE")
+            console.log(this.editdoc.data)
             this.quill.setContents(this.editdoc.data);
+            
           }
+          //this.quill.setContents(this.editdoc.data);
 
           this.quill.on('text-change', (delta, oldDelta, source)=> {
+            console.log(delta)
             if (source !== 'user') return;
             this.editdoc.submitOp(delta, {source:this.quill});
+            
           });
 
          this.quill.on('editor-change', (eventName, ...args) => {
@@ -90,14 +107,25 @@ export default {
           });
 
           this.editdoc.on('op', (op, source) =>{
-            if (source ===this.quill) return;
+            //console.log(source)
+            
+            if (source === this.quill) return;
+            //console.log('op')
             this.update(op)
           }); 
       });
   },
   methods: {
      update(op){
+        //console.log("Update")
+        /*if(this.editstatus == 1)
+        {
+          this.editdoc.data.ops.concat(op.ops)
+          this.editstatus = 0
+          op.ops = this.editdoc.data.ops
+        }*/
         this.quill.updateContents(op);
+       // console.log(this.editdoc.data)
      },
      save(note){
         this.saving = setInterval(() => {
@@ -106,7 +134,7 @@ export default {
             this.getnote().note = n 
             this.$store.dispatch('savenote',this.getnote())
 
-        }, 8000)
+        }, 6000)
      },
      getnote(){
         var note = this.menulist.find((item, index, array)=>{

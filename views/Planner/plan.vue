@@ -3,7 +3,7 @@
     <div class="ui grid" style="height:95%; overflow-y:scroll;">
 			<div class="sixteen wide column">
 				<div class="ui comments" style="width:100%;">
-					<div v-for="(item,index) in list" 
+					<div v-for="(item,index) in chatlist" 
 						:key="index" 
 						class="comment"
 						:class="{ friend: user.id != item.userid , self: item.userid == user.id }">
@@ -11,7 +11,7 @@
 							<a class="avatar" id='user-photo'>
 								<img  v-bind:src='item.img'>
 							</a>
-							<a class="author" id="username">{{item.username}}</a>
+							<a class="author" id="username" style="margin-left:4px;">{{item.username}}</a>
 							<div class="metadata" id='time'>
 								<span class="data">{{item.time}}</span>
 							</div>
@@ -24,8 +24,8 @@
     </div>
 	<div class="ui bottom attached ">
 		<div class="ui block segment">
-					<input type="text" v-model="message" width="50%">
-					<button @click="send" >Send</button>
+					<input type="text" v-model="message" width="60%;">
+					<button @click="send" class="medium ui basic button" >Send</button>
 		</div>
 	</div>
 </div>    
@@ -49,19 +49,23 @@ export default {
 	computed:{
 		user(){
       		return this.$store.state.user
-    	},
+		},
+		chatlist(){
+			return this.$store.state.chatlist
+		}
 	},
 	created:function(){
 		var array = window.location.pathname.split('/')
 		this.teamid = array[2]
 		this.$store.dispatch("GetUser",document.cookie)
+		this.$store.dispatch("getchat",this.teamid)
  	  
 	},
     mounted:function(){
 
       mdoc = connection.get("message",this.teamid);
       //console.log(mdoc.data.message)
-      var scolist = this.list
+      //var scolist = this.list
       //const store = this.$store;
       mdoc.subscribe((err)=>{
            if (err) throw err;
@@ -69,8 +73,9 @@ export default {
         mdoc.on('op',(op)=>{
             console.log("Get OP")
             console.log("This is op message "+mdoc.data.message[0])
-			this.list.push(mdoc.data.message[0])
-			console.log(this.list)
+			//this.list.push(mdoc.data.message[0])
+			this.$store.commit('chat',mdoc.data.message[0])
+			//console.log(this.list)
             //store.commit("addcomment",cdoc.data.message[0])
          });
       });
@@ -107,18 +112,20 @@ export default {
 	color: #fff;
 	font-weight: bold;
 	font-size: 16px;
+	margin-left: 40px;
+	padding-left: 8px;
 }
 
 .friend .text {
 	background: #1adda4;
-	width: 60%;
+	width: 55%;
 }
 .self .text {
 	background:#1ddced;
 }
 
 .self .content {
-	margin-left: 50%;
+	margin-left: 45%;
 }
 
 .self #user-photo{

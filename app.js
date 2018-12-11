@@ -96,7 +96,7 @@ app.get('/auth/github/callback', function (req, res) {
       
        
     }).then((tok)=>{
-        res.cookie('accesstoken', tok,{domain:'140.136.150.93', maxAge: 1000000 });
+        res.cookie('accesstoken', tok,{domain:'140.136.150.93', maxAge: 10000000 });
         res.redirect('http://140.136.150.93/upload/index')
     })
     
@@ -171,12 +171,14 @@ function createDoc(noteid,id)
 
     var doc = connection.get(noteid, id);
     var commentdoc = connection.get('comment', noteid);
-
+    
     doc.fetch(function(err) {
       if (err) throw err;
       if (doc.type === null) {
-        doc.create([], 'rich-text');
+        doc.create([{insert: ' '}], 'rich-text');
         return;
+      }else{
+        console.log(doc.data)
       }
       //callback();
     });

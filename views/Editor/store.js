@@ -25,7 +25,8 @@ export const store = new Vuex.Store({
         group:[],
         plan:[],
         login: false,
-        groupmessage:'default'
+        groupmessage:'default',
+        chatlist:[],
         //detail: db.getdetail()
     },
     getters: {
@@ -65,7 +66,9 @@ export const store = new Vuex.Store({
             state.menulist.push(obj)
         },
         savenote:function(state,obj){
-            state.menulist[obj.list_num].note = obj.note
+            console.log(state.menulist[obj.list_num-1])
+            console.log(obj.note)
+            state.menulist[obj.list_num-1].note = obj.note
             console.log("FinishSaving")
         },
         getnoteinfo:function(state,obj){
@@ -105,7 +108,13 @@ export const store = new Vuex.Store({
         },
         groupnote:function(state,obj){
             state.groupmessage = obj
-        }
+        },
+        getchat:function(state,obj){
+            state.chatlist = obj
+        },
+        chat:function(state,obj){
+            state.chatlist.push(obj)
+        },
       
     },
     actions:{
@@ -135,6 +144,7 @@ export const store = new Vuex.Store({
         setmenulist: (context,id)=>{
             axios.get('/upload/RESTdetail/'+ hash.dec(id) + "/")
                 .then((response)=> {
+                console.log(response.data)
                 context.commit("setmenulist",response.data)
                 //context.menulist = response.data                   
                 })
@@ -238,6 +248,14 @@ export const store = new Vuex.Store({
                 //context.commit("addmenulist",response.data)       
             })
             .catch(function (error) {
+                console.log("Post Detail error"+ error);
+            });
+        },
+        getchat:(context,obj)=>{
+            axios.get('/person/chat/'+ obj).then((response)=>{
+                console.log(response.data)
+                context.commit('getchat',response.data)
+            }) .catch(function (error) {
                 console.log("Post Detail error"+ error);
             });
         },
