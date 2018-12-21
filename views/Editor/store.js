@@ -63,6 +63,7 @@ export const store = new Vuex.Store({
         addmenulist:function(state,obj){
             obj.idnote_list = hash.hashes(obj.noteid*100 + obj.list_num)
             obj.noteid = hash.hashes(obj.noteid)
+            console.log(obj)
             state.menulist.push(obj)
         },
         savenote:function(state,obj){
@@ -156,7 +157,7 @@ export const store = new Vuex.Store({
             axios.post('/upload/addnotedetail/', obj)
             .then((response)=> {
                 console.log(response.data)
-                context.commit("addmenulist",response.data)       
+                //context.commit("addmenulist",response.data)       
             })
             .catch(function (error) {
                 console.log("Post Detail error"+ error);
@@ -280,7 +281,9 @@ export const store = new Vuex.Store({
             .catch(function (error) {
                 console.log("Put GroupNote Permission error"+ error);
             });
-        }
+        },
+
+
     }
 
 

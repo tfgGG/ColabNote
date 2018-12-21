@@ -45,6 +45,10 @@
 <script>
 var hash = require("../../lib/hash.js")
 import $ from 'jquery'
+import ShareDB from 'sharedb/lib/client';
+var socket = new WebSocket('ws://'+location.hostname+":"+location.port);
+var connection = new ShareDB.Connection(socket);
+var menudoc;
 export default {
   props:['ids','mode'],
   data: function() {
@@ -67,6 +71,26 @@ export default {
      this.$store.dispatch('setmenulist', this.ids[0] )
       this.$store.commit("setnoteid",this.ids)
   },
+  mounted:function(){
+    
+    menudoc = connection.get('menu',this.ids[0])
+    
+    // const store = this.$store;
+     menudoc.subscribe((err)=>{
+       if (err) throw err;
+
+       menudoc.on('op',(op)=>{
+          console.log("Get OP")
+          console.log("This is op menu "+menudoc.data.menu[0])
+          //this.list.push(mdoc.data.message[0])
+          this.$store.commit('addmenulist',menudoc.data.menu[0])
+          //console.log(this.list)
+                //store.commit("addcomment",cdoc.data.message[0])
+         });
+
+     })
+
+  },
   methods:{
     changepage(noteid,id){
         
@@ -85,6 +109,7 @@ export default {
         noteid: hash.dec(this.ids[0])
       }
       this.newtitle = ""
+      menudoc.submitOp([{p: ['menu','0'], li:obj}]);
       this.$store.dispatch("addmenulist",obj)    
     },
     doneEdit(item){

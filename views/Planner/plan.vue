@@ -97,6 +97,7 @@ export default {
             }
             this.message=''
 			this.$store.dispatch("chat",obj)
+			
             mdoc.submitOp([{p: ['message','0'], li:obj}]);
         }
         

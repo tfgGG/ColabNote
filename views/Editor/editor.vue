@@ -38,10 +38,17 @@ export default {
       menulist(){
         return this.$store.getters.menulist
       },
+      user(){
+         return this.$store.state.user
+      },
+      noteinfo(){
+        return this.$store.state.noteinfo
+      }
   },
   created: function(){ 
      this.save()
      //this.$store.dispatch("GetUser")
+     //this.$store.dispatch("GetUser",document.cookie)
      console.log("MODE:"+this.mode)
   
     
@@ -59,7 +66,7 @@ export default {
       this.editdoc.subscribe((err)=> { 
   
           if (err) throw err;
-          
+          console.log(this.editdoc.data.ops[0])
           //代表server turn on again 或 使用者本來就空的
           if(this.editdoc.data.ops[0].insert == ' '){
              this.loading ="Data Loading...."
@@ -67,10 +74,9 @@ export default {
                 console.log("printing IF")
                 this.editstatus = 1
                 
-
                 if(this.getnote().note !='' && this.getnote().note != null)
                 {
-                    console.log(this.getnote().note)
+                    console.log(this.getnote())
                     var parsedata = JSON.parse(this.getnote().note)
                 //this.quill.setContents(parsedata.ops)
                   console.log(parsedata.ops)

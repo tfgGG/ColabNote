@@ -118,7 +118,16 @@ app.get('/note/:noteid/1/',function(req,res,next){
     var newhash2 = hashids.encode(req.params.noteid*100 + 1) 
     res.redirect('../../'+ newhash1+'/'+ newhash2)
 })
+/*
+app.get('/note/:noteid/1/secret',function(req,res,next){
 
+    var hashids = new Hashids("",6)
+    var newhash1 = hashids.encode(req.params.noteid)
+    //console.log(newhash1)
+    //console.log(newhash2)
+    var newhash2 = hashids.encode(req.params.noteid*100 + 1) 
+    res.redirect('../../../'+ newhash1+'/'+ newhash2+"?p=view")
+})*/
 
 app.get('/note/:noteid/:id',function(req,res,next){
     /*if(req.session.islogin == 0 || req.session.islogin == null){
@@ -171,14 +180,23 @@ function createDoc(noteid,id)
 
     var doc = connection.get(noteid, id);
     var commentdoc = connection.get('comment', noteid);
-    
+    var menudoc = connection.get('menu',noteid)
+
     doc.fetch(function(err) {
       if (err) throw err;
       if (doc.type === null) {
-        doc.create([{insert: ' '}], 'rich-text');
+        doc.create([{insert:' '}], 'rich-text');
+        console.log("Create")
+        console.log(doc.data.ops)
         return;
       }else{
-        console.log(doc.data)
+        if( JSON.stringify(doc.data.ops[0]) ===  JSON.stringify({insert:' '}))
+        {
+            console.log("Shift")
+            console.log(doc.data.ops[0])
+            doc.data.ops.shift()
+        }
+        console.log(doc.data.ops)
       }
       //callback();
     });
@@ -187,6 +205,14 @@ function createDoc(noteid,id)
         if (err) throw err;
         if (commentdoc.type === null) {
             commentdoc.create({comment:[]});
+        return;
+      }
+    });
+
+    menudoc.fetch(function(err) {
+        if (err) throw err;
+        if (menudoc.type === null) {
+            menudoc.create({menu:[]});
         return;
       }
     });
